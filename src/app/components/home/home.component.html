@@ -1,0 +1,26 @@
+<section class="content">
+  <app-float-navbar></app-float-navbar>
+  <div class="home">
+    <div class="info">
+      <img src="../../../assets/img/banner3.jpg" alt="banner">
+      <h1 class="info-title">Bienvenido al Sistema</h1>
+      <hr class="line">
+      <div class="card">
+        <span class="card-prop">Entradas</span>
+        <span class="card-number">15</span>
+      </div>
+      <div class="card">
+        <span class="card-prop">Salidas</span>
+        <span class="card-number">15</span>
+      </div>
+    </div>
+    <div class="camera_home">
+      <!-- Botones para activar y desactivar la imagen -->
+      <div class="camera_btns">
+        <button class="btn_action" (click)="showVideo()">Activar Cámara</button>
+        <button class="btn_action" (click)="hideVideo()">Apagar Cámara</button>
+      </div>
+      <img src="{{lifeUrl}}" id="videoImage" alt="">
+    </div>
+  </div>
+</section>

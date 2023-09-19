@@ -1,0 +1,10 @@
+<div class="container_float {{visible && 'hide_nav'}}" id="hiddenNav">
+  <h1 class="user-name">{{sysName}}</h1>
+  <ul class="nav_float">
+    <li *ngFor="let view of views" class="float_link">
+      <a href="{{view.path}}" [attr.target]="view.blank ? '_blank' : null">
+        <i class="{{view.icon}}"></i>
+        <span>{{view.pathName}}</span></a>
+    </li>
+  </ul>
+</div>

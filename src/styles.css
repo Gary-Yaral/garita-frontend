@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --width-img: 6rem;
+  --color-nav: rgb(58, 53, 53);
+  --hover-bg: rgb(255, 252, 76);
+  --margin-top: 4rem;
+  --height: 100vh
+  --width-nav: 14rem;
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
