@@ -27,6 +27,15 @@ export class StorageService {
     }
   }
 
+  rolExists(rol:string) {
+    const storage = this.getStorage()
+    if(!storage) return false
+    if(!storage.data) return false
+    if(!storage.data.roles) return false
+    if(!Array.isArray(storage.data.roles)) return false
+    return storage.data.roles.includes(rol)
+  }
+
   setStorage(data: any) {
     localStorage.setItem(this.storageKey, JSON.stringify(data))
   }

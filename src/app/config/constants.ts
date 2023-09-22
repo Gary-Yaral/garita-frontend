@@ -7,7 +7,7 @@ const VIEWS = [
   {pathName:"Choferes", path:"/dashboard/drivers" , icon:"fa-solid fa-users"},
   {pathName:"Roles", path:"/dashboard/roles", icon:"fa-solid fa-user-tie"},
   {pathName:"Registros", path:"/dashboard/registers", icon:"fa-solid fa-list"},
-  {pathName:"Salir", path:"/dashboard/exit", icon:"fa-solid fa-arrow-right-from-bracket"},
+  /* {pathName:"Salir", path:"/dashboard/exit", icon:"fa-solid fa-arrow-right-from-bracket"}, */
 ]
 
 const ROUTES_API = {

@@ -1,18 +1,18 @@
 <main>
   <section class="container">
-    <form>
+    <form [formGroup]="login">
       <img class="form-img" src="../../../assets/img/shield.png" alt="">
       <h1 class="system_name">{{sysName}}</h1>
       <div class="input-block">
-        <input type="text" name="username" placeholder="Usuario">
-        <sub class="error hidden" id="username-error"></sub>
+        <input type="text" formControlName="username" name="username" placeholder="Usuario">
+        <sub class="error {{errors['username'] === '' && 'hidden'}}" id="username-error">{{errors['username']}}</sub>
       </div>
       <div class="input-block">
-        <input type="text" name="password" placeholder="Contraseña">
-        <sub class="error hidden" id="password-error"></sub>
+        <input type="text" formControlName="password" name="password" placeholder="Contraseña">
+        <sub class="error {{errors['password'] === '' && 'hidden'}}" id="password-error">{{errors['password']}}</sub>
       </div>
-      <input type="submit" value="Acceder">
-      <sub class="error hidden" id="access-error"></sub>
+      <input type="submit" value="Acceder" (click)="sendData()">
+      <sub class="error {{errors['submit'] === '' && 'hidden'}}" id="access-error">{{errors['submit']}}</sub>
     </form>
   </section>
 </main>

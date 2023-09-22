@@ -5,5 +5,11 @@
     <li class="float_link" *ngFor="let view of views">
       <a href="{{view.path}}" [attr.target]="view.blank ? '_blank' : null">{{view.pathName}}</a>
     </li>
+    <li class="float_link" *ngIf="visible">
+      <a href="dashboard/users">Usuarios</a>
+    </li>
+    <li class="float_link">
+      <a href="#" (click)="closeSession()">Salir</a>
+    </li>
   </ul>
 </nav>

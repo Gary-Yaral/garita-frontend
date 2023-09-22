@@ -11,6 +11,8 @@ import { RegistersComponent } from './components/registers/registers.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { LoggedGuard } from './guards/logged.guard';
+import { UsersComponent } from './components/users/users.component';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -56,6 +58,11 @@ const routes: Routes = [
       {
         path:"registers",
         component: RegistersComponent
+      },
+      {
+        path:"users",
+        component: UsersComponent,
+        canActivate: [AdminGuard]
       }
     ]
   },

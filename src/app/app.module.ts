@@ -16,6 +16,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegistersComponent } from './components/registers/registers.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { ReactiveFormsModule } from '@angular/forms';
+import { UsersComponent } from './components/users/users.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 
@@ -32,12 +34,14 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
     LoginComponent,
     DashboardComponent,
     RegistersComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
     SocketIoModule.forRoot(config)
   ],
   providers: [],
