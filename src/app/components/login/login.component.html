@@ -8,7 +8,7 @@
         <sub class="error {{errors['username'] === '' && 'hidden'}}" id="username-error">{{errors['username']}}</sub>
       </div>
       <div class="input-block">
-        <input type="text" formControlName="password" name="password" placeholder="Contraseña">
+        <input type="password" formControlName="password" name="password" placeholder="Contraseña">
         <sub class="error {{errors['password'] === '' && 'hidden'}}" id="password-error">{{errors['password']}}</sub>
       </div>
       <input type="submit" value="Acceder" (click)="sendData()">

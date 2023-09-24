@@ -10,14 +10,21 @@ const VIEWS = [
   /* {pathName:"Salir", path:"/dashboard/exit", icon:"fa-solid fa-arrow-right-from-bracket"}, */
 ]
 
+const ROLES = {
+  SUPER: 'super',
+  ADMINISTRATOR: 'administrador',
+  USER: 'usuario',
+}
+
 const ROUTES_API = {
-  access: "http://localhost:4000/get-access"
+  login: "http://localhost:4000/user/get-access"
 }
 
 export {
   CAMERA_PATH,
   SYSTEM_NAME,
   VIEWS,
-  ROUTES_API
+  ROUTES_API,
+  ROLES
 
 }

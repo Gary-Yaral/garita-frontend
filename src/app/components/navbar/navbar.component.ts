@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SYSTEM_NAME, VIEWS } from 'src/app/config/constants';
+import { ROLES, SYSTEM_NAME, VIEWS } from 'src/app/config/constants';
 import { pathObject } from 'src/app/interfaces/path';
 import { NavStatusService } from 'src/app/services/nav-status.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -14,19 +14,19 @@ export class NavbarComponent implements OnInit {
   sysName:string = SYSTEM_NAME
   views: pathObject[] = VIEWS
   visible: boolean = false
+  isAdmin: boolean = false
   constructor(
     private navStatus: NavStatusService,
     private storageService: StorageService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.navStatus.isVisible$.subscribe(status => {
       this.visible = status;
     });
 
-    this.visible = this.storageService.rolExists('admin')
+     this.isAdmin = this.storageService.rolExists(ROLES.ADMINISTRATOR)
   }
 
   openClose() {
@@ -39,6 +39,6 @@ export class NavbarComponent implements OnInit {
 
   closeSession() {
     this.storageService.cleanStorage()
-    this.router.navigate([''])
+    this.router.navigate(['/login'])
   }
 }

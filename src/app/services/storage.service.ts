@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UserData } from '../interfaces/allTypes';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,24 @@ export class StorageService {
     if(!storage.data.roles) return false
     if(!Array.isArray(storage.data.roles)) return false
     return storage.data.roles.includes(rol)
+  }
+
+  userExists(): boolean {
+    try {
+      const storage = this.getStorage()
+      const {data} = storage
+      const {user} = data
+      user as UserData;
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  getUser(): UserData {
+      const storage = this.getStorage()
+      return storage.data.user as UserData
   }
 
   setStorage(data: any) {

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CAMERA_PATH } from 'src/app/config/constants';
-import { FloatNavbarComponent } from '../float-navbar/float-navbar.component';
 import { SocketService } from 'src/app/services/socket.service';
-import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -17,9 +15,8 @@ export class HomeComponent implements OnInit {
   }
   constructor(
     private socket: SocketService
-  ) {
+  ) {}
 
-  }
   ngOnInit(): void {
     this.socket.getMessage().subscribe((data: any) => {
       console.log(data)
