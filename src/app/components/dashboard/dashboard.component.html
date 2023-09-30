@@ -1,5 +1,9 @@
 <main>
   <app-navbar></app-navbar>
+  <app-new-register *ngIf="formVisible" (showForm)="hideForm()"></app-new-register>
+  <div (click)="showForm()" *ngIf="wasDetected" class="detected-window {{iconSelected.color}}">
+    <span>Detectado</span><i class="fa-solid {{iconSelected.class}}"></i>
+  </div>
   <router-outlet></router-outlet>
 </main>
 

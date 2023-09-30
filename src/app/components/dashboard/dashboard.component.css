@@ -5,3 +5,28 @@ main {
   display: flex;
   flex-direction: column;
 }
+
+.detected-window {
+  padding: 1rem;
+  display: flex;
+  position: absolute;
+  top: 4rem;
+  right: 0;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.green-card {
+  color: green;
+  background: rgb(193, 255, 193);
+  display: flex;
+  gap: 10px;
+}
+
+.red-card {
+  color: rgb(201, 86, 4);
+  background: rgb(255, 202, 141);
+  display: flex;
+  gap: 10px;
+}

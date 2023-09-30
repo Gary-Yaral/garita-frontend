@@ -60,6 +60,9 @@
 
 .info-title {
   font-size: 2rem;
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
 }
 
 @media screen and (max-width:600px) {
