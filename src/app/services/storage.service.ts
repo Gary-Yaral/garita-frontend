@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserData, Vehicle } from '../interfaces/allTypes';
+import { FormDataStorage, UserData, Vehicle } from '../interfaces/allTypes';
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +68,7 @@ export class StorageService {
       const storage = localStorage.getItem(this.storageFormKey)
       if(!storage) return false
       try{
-        let data: Vehicle = {...JSON.parse(storage)}
+        let data: FormDataStorage = {...JSON.parse(storage)}
         return data
       } catch(e) {
         console.log("Data not found");
@@ -76,7 +76,11 @@ export class StorageService {
       }
   }
 
-  saveFormData(data: Vehicle) {
-      localStorage.setItem(this.storageFormKey, JSON.stringify(data))
+  saveFormData(data: Vehicle, exists: boolean) {
+      localStorage.setItem(this.storageFormKey, JSON.stringify({vehicle: data, exists}))
+    }
+
+  clearDetectedData() {
+    localStorage.removeItem(this.storageFormKey)
   }
 }

@@ -5,7 +5,6 @@ const VIEWS = [
   {pathName:"Cámara", path:"/dashboard/camera", icon:"fa-solid fa-camera", blank:"_blank"},
   {pathName:"Vehiculos", path:"/dashboard/vehicles", icon:"fa-solid fa-car"},
   {pathName:"Choferes", path:"/dashboard/drivers" , icon:"fa-solid fa-users"},
-  {pathName:"Roles", path:"/dashboard/roles", icon:"fa-solid fa-user-tie"},
   {pathName:"Registros", path:"/dashboard/registers", icon:"fa-solid fa-list"},
   /* {pathName:"Salir", path:"/dashboard/exit", icon:"fa-solid fa-arrow-right-from-bracket"}, */
 ]

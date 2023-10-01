@@ -7,16 +7,50 @@ main {
 }
 
 .detected-window {
-  padding: 1rem;
   display: flex;
   position: absolute;
   top: 4rem;
-  right: 0;
+  right: 10px;
   align-items: center;
   cursor: pointer;
   z-index: 10;
+  height: 4rem;
 }
 
+.border-green {
+  border: 1px solid green;
+}
+
+.border-red {
+  border: 1px solid rgb(198, 64, 2);
+}
+
+.border-left-green {
+  border-left: 1px solid green;
+}
+
+.border-left-red {
+  border-left: 1px solid rgb(198, 64, 2);
+}
+
+.detected-card {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  cursor: alias;
+}
+
+.fa-xmark{
+  font-size: 1.5rem;
+}
+.close-green{
+  color:green;
+}
+
+.close-red {
+  color: rgb(198, 64, 2);
+}
 .green-card {
   color: green;
   background: rgb(193, 255, 193);
@@ -25,8 +59,19 @@ main {
 }
 
 .red-card {
-  color: rgb(201, 86, 4);
-  background: rgb(255, 202, 141);
+  color: rgb(198, 64, 2);
+  background: rgb(255, 212, 133);
   display: flex;
   gap: 10px;
 }
+
+.remove-card {
+  width: 3.5rem;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(255, 255, 255);
+}
+
+

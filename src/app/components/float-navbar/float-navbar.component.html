@@ -7,6 +7,12 @@
         <i class="{{view.icon}}"></i>
         <span>{{view.pathName}}</span></a>
     </li>
+    <li class="float_link" *ngIf="isSuperAdmin">
+      <a href="dashboard/roles">
+        <i class="fa-solid fa-user-tie"></i>
+        <span>Roles</span>
+      </a>
+    </li>
     <li class="float_link" *ngIf="isAdmin">
       <a href="dashboard/users">
         <i class="fa-solid fa-user-group"></i>

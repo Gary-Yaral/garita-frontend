@@ -6,6 +6,7 @@
   --margin-top: 4rem;
   --height: 100vh
   --width-nav: 14rem;
+  --green-btn: rgb(48, 183, 48);
 }
 * {
   padding: 0;
@@ -59,15 +60,19 @@ body {
 }
 
 .btn_action {
-  padding: 10px;
+  padding: 1rem;
   cursor: pointer;
   border: none;
   border-radius: 5px;
 }
 
 .btn_action:first-child {
-  background: rgb(48, 183, 48);
+  background: var(--green-btn);
   color: white
+}
+
+.hidden {
+  display: none;
 }
 
 @media screen and (max-width: 600px) {

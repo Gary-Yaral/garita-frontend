@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Vehicle } from 'src/app/interfaces/allTypes';
+import { CAMERA_PATH } from 'src/app/config/constants';
 import { CameraService } from 'src/app/services/camera.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -13,16 +13,18 @@ export class DashboardComponent implements OnInit{
   icons = {
     done: {
       class:"fa-circle-check",
-      color: "green-card",
+      color: "green",
     },
     danger: {
       class:"fa-circle-exclamation",
-      color: "red-card"
+      color: "red"
     }
   }
+
   wasDetected = false;
   iconSelected = this.icons.danger
   formVisible = false;
+  lifeUrl: string = CAMERA_PATH
 
   constructor(
     private socket: SocketService,
@@ -31,9 +33,16 @@ export class DashboardComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
+    // Leemos los datos del storage
+    this.readStorageData()
+    this.detectPlate()
+  }
+
+  readStorageData() {
     const formData = this.storageService.getFormData()
     if(formData) {
-      if(formData.id === 0) {
+      const {vehicle, exists } = formData
+      if(!exists) {
         this.iconSelected = this.icons.danger
         this.cameraService.setFound(false)
       } else {
@@ -41,10 +50,12 @@ export class DashboardComponent implements OnInit{
         this.cameraService.setFound(true)
       }
 
-      this.cameraService.setVehicle(formData)
+      this.cameraService.setVehicle(vehicle)
       this.wasDetected = true
-
     }
+  }
+
+  detectPlate() {
     this.socket.getMessage().subscribe((data: any) => {
 
       let vehicle = this.cameraService.getVehicle()
@@ -55,7 +66,7 @@ export class DashboardComponent implements OnInit{
           this.cameraService.setFound(true)
           this.iconSelected = this.icons.done
           this.wasDetected = true
-          this.storageService.saveFormData(data.vehicle)
+          this.storageService.saveFormData(data.vehicle, data.exists)
         } else{
           let vehicle = this.cameraService.getInitialData()
           vehicle.plate_number = data.vehicle.plate_number
@@ -63,7 +74,7 @@ export class DashboardComponent implements OnInit{
           this.cameraService.setFound(false)
           this.iconSelected = this.icons.danger
           this.wasDetected = true
-          this.storageService.saveFormData(data.vehicle)
+          this.storageService.saveFormData(vehicle, data.exists)
         }
         return
       }
@@ -74,14 +85,9 @@ export class DashboardComponent implements OnInit{
           this.cameraService.setFound(true)
           this.iconSelected = this.icons.done
           this.wasDetected = true
-          this.storageService.saveFormData(data.vehicle)
+          this.storageService.saveFormData(data.vehicle, data.exists)
         }
       }
-    })
-
-    this.cameraService.vehicle$.subscribe((vehicle: Vehicle) => {
-      console.log("Actualizado el detected")
-      console.log(vehicle)
     })
   }
 
@@ -90,5 +96,11 @@ export class DashboardComponent implements OnInit{
   }
   showForm() {
     this.formVisible = true
+  }
+
+  deleteData() {
+    this.cameraService.restartData()
+    this.storageService.clearDetectedData()
+    this.wasDetected = false
   }
 }

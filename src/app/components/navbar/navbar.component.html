@@ -5,6 +5,9 @@
     <li class="float_link" *ngFor="let view of views">
       <a href="{{view.path}}" [attr.target]="view.blank ? '_blank' : null">{{view.pathName}}</a>
     </li>
+    <li class="float_link" *ngIf="isSuperAdmin">
+      <a href="dashboard/roles">Roles</a>
+    </li>
     <li class="float_link" *ngIf="isAdmin">
       <a href="dashboard/users">Usuarios</a>
     </li>

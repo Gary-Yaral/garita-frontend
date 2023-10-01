@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   views: pathObject[] = VIEWS
   visible: boolean = false
   isAdmin: boolean = false
+  isSuperAdmin: boolean = false
   constructor(
     private navStatus: NavStatusService,
     private storageService: StorageService,
@@ -27,6 +28,7 @@ export class NavbarComponent implements OnInit {
     });
 
      this.isAdmin = this.storageService.rolExists(ROLES.ADMINISTRATOR)
+     this.isSuperAdmin = this.storageService.rolExists(ROLES.SUPER)
   }
 
   openClose() {

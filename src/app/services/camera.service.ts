@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CAMERA_PATH } from '../config/constants';
 import { Vehicle } from '../interfaces/allTypes';
 
 @Injectable({
@@ -23,11 +22,7 @@ export class CameraService {
   wasFound: boolean = false;
   detected: boolean = false;
 
-  getVideo(): Observable<Blob> {
-    return this.http.get(CAMERA_PATH, { responseType: 'blob' });
-  }
-
-  private vehicle = new BehaviorSubject<Vehicle>(this.initialVehicle);
+  private vehicle = new BehaviorSubject<Vehicle>(this.getInitialData());
   vehicle$ = this.vehicle.asObservable();
 
   setVehicle(vehicle: Vehicle) {
@@ -48,4 +43,9 @@ export class CameraService {
   getInitialData() {
     return structuredClone(this.initialVehicle)
   }
+
+  restartData() {
+    this.setVehicle(this.getInitialData())
+  }
 }
+

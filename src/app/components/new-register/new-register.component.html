@@ -1,6 +1,70 @@
-<section class="new-register">
-  <form>
-    <div class="close" (click)="hideForm()">Cerrar</div>
-    <h2>Nuevo Registro</h2>
+<div class="container-register">
+  <form class="form-register">
+    <div class="form-header">
+      <div class="close" (click)="hideForm()">
+        <i class="fa-solid fa-arrow-left"></i>
+      </div>
+      <h2>Nuevo Registro</h2>
+    </div>
+    <hr>
+    <h3>Vehículo</h3>
+    <div class="checkbox">
+      <input type="checkbox" name="write_enable" id="write_enable">
+      <label for="write_enable">¿Placa no fue leída correctamente?</label>
+    </div>
+    <div class="input-block">
+      <label for="">Numero de Placa</label>
+      <input type="text" name="number_plate" id="number_plate">
+      <sub class="error">Ingresa una placa valida</sub>
+    </div>
+    <div class="input-block">
+      <label for="">Tipo de Vehiculo</label>
+      <select name="" id="">
+        <option value="">Selecciona un tipo de vehículo</option>
+      </select>
+      <sub class="error">Debes seleccionar el tipo de vehículo</sub>
+    </div>
+    <div class="input-block">
+      <label for="">Tipo de Acceso</label>
+      <select name="" id="">
+        <option value="">Selecciona el tipo de acceso</option>
+      </select>
+      <sub class="error">Debes seleccionar el tipo de acceso</sub>
+    </div>
+    <div class="input-block">
+      <label for="">Estado (Ingreso / Salida)</label>
+      <select name="" id="">
+        <option value="">Selecciona el estado</option>
+      </select>
+      <sub class="error">Debes seleccionar el estado del vehículo</sub>
+    </div>
+    <hr>
+    <h3>Chofér</h3>
+    <div class="input-block">
+      <label for="">Cédula</label>
+      <input type="text" name="number_plate" id="number_plate">
+      <sub class="error">Ingresa una cédula valida</sub>
+    </div>
+    <div class="input-block">
+      <label for="">Nombres</label>
+      <input type="text" name="number_plate" id="number_plate">
+      <sub class="error">Ingresa nombres válidos</sub>
+    </div>
+    <div class="input-block">
+      <label for="">Apellidos</label>
+      <input type="text" name="number_plate" id="number_plate">
+      <sub class="error">Ingresa apellidos válidos</sub>
+    </div>
+    <div class="input-block">
+      <label for="">Tipo de Chofér</label>
+      <select name="" id="">
+        <option value="">Selecciona el tipo de chofér</option>
+      </select>
+      <sub class="error">Debes seleccionar el tipo de chofér</sub>
+    </div>
+    <div class="btns-block">
+      <button>Guardar</button>
+      <button>Cancelar</button>
+    </div>
   </form>
-</section>
+</div>

@@ -22,6 +22,7 @@ export class FloatNavbarComponent {
   views: pathObject[] = VIEWS
   visible: boolean = false
   isAdmin: boolean = false
+  isSuperAdmin: boolean = false
   constructor(
     private navStatus: NavStatusService,
     private storageService: StorageService,
@@ -36,6 +37,8 @@ export class FloatNavbarComponent {
     });
     // Verificamos si tiene rol administrador
     this.isAdmin = this.storageService.rolExists(ROLES.ADMINISTRATOR)
+    // Verificamos si tiene rol administrador
+    this.isSuperAdmin = this.storageService.rolExists(ROLES.SUPER)
     // Obtenemos los datos del usuario logueado
     this.getUserData()
   }

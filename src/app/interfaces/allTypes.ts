@@ -19,3 +19,8 @@ export interface Vehicle {
   vehicle_type_id?: number,
   vehicle_type_name?: string,
 }
+
+export interface FormDataStorage {
+  vehicle: Vehicle,
+  exists: boolean
+}

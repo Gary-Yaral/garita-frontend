@@ -1,9 +1,16 @@
 <main>
   <app-navbar></app-navbar>
   <app-new-register *ngIf="formVisible" (showForm)="hideForm()"></app-new-register>
-  <div (click)="showForm()" *ngIf="wasDetected" class="detected-window {{iconSelected.color}}">
-    <span>Detectado</span><i class="fa-solid {{iconSelected.class}}"></i>
-  </div>
+  <section class="detected-window {{'border-'+iconSelected.color}}" *ngIf="wasDetected">
+    <div (click)="showForm()" class="detected-card {{iconSelected.color+'-card'}}">
+      <span class="detected-text">Vehiculo detectado</span>
+      <i class="fa-solid {{iconSelected.class}}"></i>
+    </div>
+    <div class="remove-card {{'border-left-'+iconSelected.color}}" (click)="deleteData()">
+      <i class="fa-solid fa-xmark {{'close-'+iconSelected.color}}"></i>
+    </div>
+  </section>
+  <img src="{{lifeUrl}}" class="hidden" id="videoImage" alt="">
   <router-outlet></router-outlet>
 </main>
 

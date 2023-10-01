@@ -1,32 +1,120 @@
-.new-register {
+.container-register {
   display: flex;
-  position: fixed;
+  justify-content: center;
   width: 100%;
   height: 100vh;
+  background: rgba(0, 0, 0, 0.801);
+  position: fixed;
   z-index: 100;
-  top:0;
+  top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.374);
-  justify-content: center;
-  padding: 1rem;
-  box-sizing: border-box;
+  overflow-y: auto;
 }
 
-.new-register form {
-  background: white;
+.form-register {
+  display: flex;
   width: 100%;
   max-width: 600px;
-  margin-top: 1rem;
-  position: relative;
+  height: fit-content;
+  box-sizing: border-box;
+  background: white;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+  gap: 1rem;
+  top: 0;
+  left: 0;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+}
+
+.form-header h2 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: rgb(229, 229, 229);
+  padding: 10px;
+  justify-content: center;
 }
 
 .close {
-  position: absolute;
-  top: -1.5rem;
-  padding: 5px;
+  padding: 10px;
   cursor: pointer;
-  right: 0;
-  font-size: 1rem;
+  width: 3.5rem;
+  height: 100%;
+  font-size: 2rem;
   color: rgb(255, 255, 255);
-  background: rgb(255, 68, 68);
+  background: rgb(164, 164, 164);
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+
+.input-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-block input,
+.input-block select
+{
+  padding: 1rem;
+  outline-color: rgb(89, 179, 206);
+}
+
+.btns-block {
+  display: flex;
+  justify-content: center;
+  gap:1rem;
+}
+
+.btns-block button {
+  width: 100%;
+  max-width: 50%;
+  padding: 1rem;
+  cursor: pointer;
+  border: none;
+  font-size: 1.2rem;
+}
+
+.btns-block button:nth-child(1) {
+  background: var(--green-btn);
+  color: white;
+}
+
+.btns-block button:nth-child(2) {
+  background: rgb(142, 142, 142);
+  color: white;
+}
+
+@media screen and (max-width: 600px) {
+  .btns-block {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap:1rem;
+  }
+
+  .btns-block button {
+    width: 100%;
+    padding: 1rem;
+    max-width: 100%;
+  }
 }
