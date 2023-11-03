@@ -1,6 +1,5 @@
-<section class="content">
-  <app-float-navbar></app-float-navbar>
-  <h1 class="section-title">Choferes</h1>
+<section class="section-container">
+  <h1 class="section-title">{{sectionName}}</h1>
  <button class="btn_add">Agregar</button>
  <div class="table-filters">
   <form class="per-page-container" [formGroup]="perPage">
@@ -48,3 +47,4 @@
   <button class="paginator-btn" (click)="nextPage()">Siguiente</button>
 </div>
 </section>
+

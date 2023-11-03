@@ -20,6 +20,15 @@ export interface Vehicle {
   vehicle_type_name?: string,
 }
 
+export interface Driver {
+  id?: Number,
+  dni: String,
+  surname: String,
+  name: String,
+  drive_type_id?: Number,
+  type: String
+}
+
 export interface FormDataStorage {
   vehicle: Vehicle,
   exists: boolean

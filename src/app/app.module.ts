@@ -19,6 +19,7 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UsersComponent } from './components/users/users.component';
 import { NewRegisterComponent } from './components/new-register/new-register.component';
+import { TableCommonComponent } from './components/table-common/table-common.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 
@@ -37,7 +38,8 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
     RegistersComponent,
     ErrorPageComponent,
     UsersComponent,
-    NewRegisterComponent
+    NewRegisterComponent,
+    TableCommonComponent
   ],
   imports: [
     BrowserModule,

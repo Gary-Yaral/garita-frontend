@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { CAMERA_PATH } from 'src/app/config/constants';
 import { Driver } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { Paginator } from 'src/app/utilities/paginator';
 
 @Component({
-  selector: 'app-drivers',
-  templateUrl: './drivers.component.html',
-  styleUrls: ['./drivers.component.css']
+  selector: 'app-table-common',
+  templateUrl: './table-common.component.html',
+  styleUrls: ['./table-common.component.css']
 })
-export class DriversComponent implements OnInit {
+export class TableCommonComponent {
+  @Input() sectionName: string = '';
+  @Input() path: string = '';
+  @Input() pathLoads: string = '';
+
   perPage: FormGroup = new FormGroup({
     number: new FormControl('')
   });
@@ -25,8 +29,8 @@ export class DriversComponent implements OnInit {
     private restApi: RestApiService
   ) {}
   ngOnInit(): void {
-    this.table.path = 'http://localhost:4000/driver'
-    this.table.pathLoads = '/loads'
+    this.table.path = this.path
+    this.table.pathLoads = this.pathLoads
     this.getItems()
     this.perPage.get('number')?.setValue(this.table.perPages[0])
     this.getTotalRows()

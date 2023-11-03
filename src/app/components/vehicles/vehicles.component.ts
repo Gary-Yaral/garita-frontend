@@ -7,6 +7,9 @@ import { CameraService } from 'src/app/services/camera.service';
   styleUrls: ['./vehicles.component.css']
 })
 export class VehiclesComponent implements OnInit {
+  sectionName:string = 'Vehículos'
+  path: string = 'http://localhost:4000/driver'
+  pathLoads: string = '/load'
   constructor(
     private cameraService: CameraService
   ) {
