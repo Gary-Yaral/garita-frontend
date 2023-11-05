@@ -9,25 +9,25 @@
     </select>
     <label for="per-page">entradas</label>
   </form>
-  <div class="search-container">
+  <form class="search-container" [formGroup]="search">
     <label for="search">Buscar</label>
-    <input id= "search" type="search" name="q" autocomplete="off">
-  </div>
+    <input id= "search" type="search" name="q" autocomplete="off" formControlName="filter" (input)="onInput($event)">
+  </form>
  </div>
  <div class="table-container">
   <table class="table-registers">
     <thead>
       <tr>
-        <th *ngFor="let thead of theads; let i = index;" class="{{i===0 ? 'th-sticky':''}}">{{thead}}</th>
+        <th *ngFor="let thead of theads; let i = index;" class="{{i===0 && items.length !==0 ? 'th-sticky':''}}">{{thead}}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let driver of items; let i = index;">
-        <td class="column-sticky {{(i+1)%2 === 0 ? 'sticky-even': 'sticky-odd'}}">{{i+1}}</td>
-        <td>{{driver.dni}}</td>
-        <td>{{driver.surname}}</td>
-        <td>{{driver.name}}</td>
-        <td>{{driver.type}}</td>
+      <tr *ngIf="items.length === 0">
+        <td class="sticky-even" colspan="20">No hay resultados</td>
+      </tr>
+      <tr *ngFor="let item of items; let i = index;">
+        <td class="column-sticky {{(i+1)%2 === 0 ? 'sticky-even': 'sticky-odd'}}">{{((table.currentPage - 1) * perPage.get('number')?.value) + (i+1)}}</td>
+        <td *ngFor="let field of fields">{{item[field]}}</td>
         <td>
           <div class="table-btns">
             <button class="table-btn-edit"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -38,7 +38,7 @@
     </tbody>
   </table>
 </div>
-<div class="paginator-btns">
+<div class="paginator-btns" *ngIf="items.length !== 0">
   <button class="paginator-btn" (click)="previousPage()">Anterior</button>
   <button
     *ngFor="let btn of table.pages"

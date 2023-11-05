@@ -33,3 +33,5 @@ export interface FormDataStorage {
   vehicle: Vehicle,
   exists: boolean
 }
+
+export type driverKey = keyof Driver;
