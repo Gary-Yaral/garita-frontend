@@ -19,6 +19,7 @@ export class TableCommonComponent {
 
   table: Paginator = new Paginator()
   items: any[] = []
+  total: number = 0
   perPage: FormGroup = new FormGroup({
     number: new FormControl('')
   });
@@ -75,8 +76,8 @@ export class TableCommonComponent {
   getTotalRows() {
     this.restApi.doPost(`${this.table.path}/total`, {}).subscribe((data: any) => {
         if(!data.error) {
-          if(data.drivers[0] === true) {
-            this.table.setTotal(data.drivers[1].total)
+          if(data.result[0] === true) {
+            this.table.setTotal(data.result[1].total)
           }
         }
       })
@@ -92,9 +93,12 @@ export class TableCommonComponent {
       dataToSend
     ).subscribe((data: any) => {
       if(!data.error) {
-        if(data.drivers[0] === true) {
-            this.items = data.drivers[1]
-            this.getTotalRows()
+        if(data.result[0] === true) {
+          data.result[1].map((el:any, i:number) => {
+            el.index = ((this.table.currentPage - 1) * this.perPage.get('number')?.value) + (i+1)
+          })
+          this.items = data.result[1]
+          this.getTotalRows()
         }
       }
     })
@@ -113,9 +117,12 @@ export class TableCommonComponent {
       dataToSend
     ).subscribe((data: any) => {
       if(!data.error) {
-        if(data.drivers[0] === true) {
-          this.items = data.drivers[1]
-          this.table.setTotal(data.drivers[2].total)
+        if(data.result[0] === true) {
+          data.result[1].map((el:any, i:number) => {
+            el.index = ((this.table.currentPage - 1) * this.perPage.get('number')?.value) + (i+1)
+          })
+          this.items = data.result[1]
+          this.table.setTotal(data.result[2].total)
         }
       }
     })

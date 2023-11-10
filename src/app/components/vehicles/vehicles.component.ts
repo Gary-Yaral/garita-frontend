@@ -11,7 +11,7 @@ export class VehiclesComponent implements OnInit {
   sectionName:string = 'Vehículos'
   path: string = 'http://localhost:4000/driver'
   theads: string[] = ['N°', 'Cédula', 'Apellidos', 'Nombres', 'Tipo', ' Opciones']
-  fields: string[] = ['dni','name', 'surname', 'type']
+  fields: string[] = ['index','dni','name', 'surname', 'type']
   constructor(
     private cameraService: CameraService
   ) {

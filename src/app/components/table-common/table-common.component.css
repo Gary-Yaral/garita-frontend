@@ -1,3 +1,11 @@
+.main-paginator{
+  width: 100%;
+  min-height: fit-content;
+  box-shadow: 1px 1px 5px 2px rgb(205, 205, 205);
+  background: white;
+  padding: 1rem;
+}
+
 .section-container{
   width: 100%;
   min-height: fit-content;
@@ -7,7 +15,6 @@
   width: 100%;
   overflow-x: auto;
   background: rgb(255, 255, 255);
-  box-shadow: 1px 1px 5px 2px rgb(205, 205, 205);
 }
 
 .section-title {
@@ -48,8 +55,8 @@
 }
 
 .table-registers thead {
-  background: black;
-  color: white;
+  background: white;
+  color: black;
 }
 
 .table-registers th {
@@ -62,11 +69,11 @@
 }
 
 .table-registers tbody tr:nth-child(odd) {
- background: white
+  background: rgb(237, 237, 237);
 }
 
 .table-registers tbody tr:nth-child(even){
- background: rgb(237, 237, 237);
+  background: white
 }
 
 .table-registers tbody tr:hover{
@@ -103,8 +110,8 @@
   position: -webkit-sticky;
   position: sticky;
   left: 0;
-  background: black;
-  color: white;
+  background: rgb(255, 255, 255);
+  color: black;
 }
 
 .column-sticky {
@@ -118,18 +125,18 @@
   background: rgb(186, 252, 223);
  }
 
-.sticky-odd {
+.sticky-even {
   background: white
  }
 
- .sticky-even {
+ .sticky-odd {
   background: rgb(237, 237, 237);
  }
 
  .paginator-btns {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
  }
 
  .paginator-btn {
@@ -139,16 +146,30 @@
   font-size: 1rem;
   border: none;
   background-color: transparent;
+  cursor: pointer;
  }
 
- .paginator-btns button:hover {
+ .paginator-btns .no-selected:hover {
   background-color: black;
   color: white;
  }
 
 .select-page-btn {
   background: rgb(238, 238, 238);
-  border: 1px solid gray;
+  border: 1px solid rgb(173, 173, 173);
+}
+
+.bottom-pag-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem
+}
+
+.bottom-pag-container > div {
+  flex-grow: 1;
 }
 
 
@@ -162,4 +183,17 @@
     display: flex;
     justify-content: center;
   }
+
+  .paginator-text-bottom {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .paginator-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+   }
  }
