@@ -12,12 +12,20 @@ export class VehiclesComponent implements OnInit {
   path: string = 'http://localhost:4000/driver'
   theads: string[] = ['N°', 'Cédula', 'Apellidos', 'Nombres', 'Tipo', ' Opciones']
   fields: string[] = ['index','dni','name', 'surname', 'type']
+
+  // Variables del formulario de editar
+  isVisible: boolean = true;
   constructor(
     private cameraService: CameraService
   ) {
 
   }
   ngOnInit(): void {
+  }
+
+  receiveData(event: any) {
+    this.isVisible = true
+    console.log("hola", event);
   }
 
 }

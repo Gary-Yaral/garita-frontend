@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CAMERA_PATH } from 'src/app/config/constants';
 import { Driver, driverKey } from 'src/app/interfaces/allTypes';
@@ -16,6 +16,8 @@ export class TableCommonComponent {
   @Input() pathLoads: string = '';
   @Input() theads: string[] = [];
   @Input() fields: string[] = [];
+
+  @Output() sendDataEvent = new EventEmitter<any>();
 
   table: Paginator = new Paginator()
   items: any[] = []
@@ -142,4 +144,14 @@ export class TableCommonComponent {
     this.table.setCurrentPage(n)
     this.filterData(true)
   }
+
+  updateRow(item: any) {
+    const clone = {...item}
+    if(clone.index) {
+      delete clone.index
+    }
+
+    this.sendDataEvent.emit(clone);
+  }
 }
+

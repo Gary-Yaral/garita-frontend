@@ -1,0 +1,15 @@
+.form-register {
+  margin: 1rem 0;
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  height: fit-content;
+  box-sizing: border-box;
+  background: white;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+  gap: 1rem;
+  top: 0;
+  left: 0;
+}

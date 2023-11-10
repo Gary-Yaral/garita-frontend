@@ -4,5 +4,30 @@
   [sectionName]="sectionName"
   [path]= "path"
   [theads]= "theads"
-  [fields]= "fields"></app-table-common>
+  [fields]= "fields"
+  (sendDataEvent)="receiveData($event)"></app-table-common>
+  <div class="modal-form {{!isVisible ? 'hidden': ''}}">
+    <form>
+      <div>
+        <label for=""></label>
+        <input type="text">
+        <sub class="error">Data incorrecta</sub>
+      </div>
+      <div>
+        <label for=""></label>
+        <input type="text">
+        <sub class="error">Data incorrecta</sub>
+      </div>
+      <div>
+        <label for=""></label>
+        <input type="text">
+        <sub class="error">Data incorrecta</sub>
+      </div>
+      <div>
+        <label for=""></label>
+        <input type="text">
+        <sub class="error">Data incorrecta</sub>
+      </div>
+    </form>
+  </div>
 </section>

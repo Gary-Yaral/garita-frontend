@@ -4,5 +4,42 @@
   [sectionName]="sectionName"
   [path]= "path"
   [theads]= "theads"
-  [fields]= "fields"></app-table-common>
+  [fields]= "fields"
+  (sendDataEvent)="receiveData($event)"></app-table-common>
+  <div class="modal-form {{!isVisible ? 'hidden': ''}}">
+    <form [formGroup]="formData">
+      <div class="close-form" (click)="closeModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </div>
+      <h2 class="modal-title">Editar</h2>
+      <div class="modal-input-block">
+        <label for="">Cédula</label>
+        <input type="text" name="dni" formControlName="dni">
+        <sub class="error">Data incorrecta</sub>
+      </div>
+      <div class="modal-input-block">
+        <label for="">Nombres</label>
+        <input type="text" name="name" formControlName="name">
+        <sub class="error">Data incorrecta</sub>
+      </div>
+      <div class="modal-input-block">
+        <label for="">Apellidos</label>
+        <input type="text" name="surname" formControlName="surname">
+        <sub class="error">Data incorrecta</sub>
+      </div>
+      <div class="modal-input-block">
+        <label for="">Tipo</label>
+        <select  name="type_id" formControlName="type_id">
+          <option value="">Escoja el tipo</option>
+          <option value="1">A</option>
+          <option value="2">B</option>
+        </select>
+        <sub class="error">Data incorrecta</sub>
+      </div>
+      <div class="btns-form-modal">
+        <button>Guardar</button>
+        <button>Cancelar</button>
+      </div>
+    </form>
+  </div>
 </section>
