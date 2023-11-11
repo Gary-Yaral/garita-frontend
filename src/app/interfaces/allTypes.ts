@@ -29,6 +29,11 @@ export interface Driver {
   type: String
 }
 
+export type DriverType = {
+  id: number,
+  name: string
+}
+
 export interface FormDataStorage {
   vehicle: Vehicle,
   exists: boolean

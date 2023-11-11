@@ -95,7 +95,7 @@ body {
   top: 0;
   left: 0;
   justify-content: center;
-  padding: 1rem;
+  padding: 4rem 1rem;
   overflow-y: auto;
 }
 
@@ -145,6 +145,10 @@ body {
   padding: 10px;
   font-size: 1rem;
   outline-color: rgb(0, 119, 255);
+}
+
+.error-form {
+  color: red
 }
 
 @media screen and (max-width: 600px) {
