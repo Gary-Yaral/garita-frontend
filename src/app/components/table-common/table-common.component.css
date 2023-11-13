@@ -107,6 +107,11 @@
   color: white
 }
 
+.not-results {
+  width: 100%;
+  text-align: center;
+}
+
 .th-sticky {
   position: -webkit-sticky;
   position: sticky;
@@ -172,6 +177,7 @@
 .bottom-pag-container > div {
   flex-grow: 1;
 }
+
 
 
  @media screen and (max-width: 550px) {

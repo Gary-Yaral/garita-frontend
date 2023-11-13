@@ -145,6 +145,29 @@
   border: 1px solid gray;
 }
 
+.btns-form-modal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.btns-form-modal button{
+  padding: 10px;
+  min-width: 6rem;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-modal-ok{
+  background: rgb(0, 119, 255);
+  color: white
+}
+
+.btn-modal-cancel{
+  background: rgb(209, 209, 209);
+}
 
  @media screen and (max-width: 550px) {
   .table-filters {

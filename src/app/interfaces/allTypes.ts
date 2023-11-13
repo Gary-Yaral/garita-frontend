@@ -25,7 +25,7 @@ export interface Driver {
   dni: String,
   surname: String,
   name: String,
-  type_id?: Number,
+  type_id?: Number | string,
   type: String
 }
 

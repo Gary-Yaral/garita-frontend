@@ -11,36 +11,56 @@ import { nameRegex } from 'src/app/utilities/regExp';
   styleUrls: ['./drivers.component.css']
 })
 export class DriversComponent implements OnInit {
+  /** PROPIEDADES DE LA TABLA */
   sectionName:string = 'Choferes'
   path: string = 'http://localhost:4000/driver'
   theads: string[] = ['N°', 'Cédula', 'Apellidos', 'Nombres', 'Tipo', ' Opciones']
   fields: string[] = ['index','dni','name', 'surname', 'type']
 
-  isVisible:boolean = false
-  types: DriverType[] = []
+  /** PROPIEDADES DEL COMPONENTE */
+  hasChanged = false // Propiedad para refresh tabla
+  isVisible:boolean = false // Propiedad para ocultar o mostrar formulario
+  types: DriverType[] = [] // Lista de typos de choferes
+  formTitle: string = ''
+
+  // Datos para poder usar la ventana de alerta
+  modalAlert: any = {
+    title: '',
+    isVisible: false,
+    message: '',
+    actions: {
+      accept: () => {},
+      cancel: () => {}
+    }
+  }
+  // Datos para los mensajes de error del formulario modal
   errors: any = {
     dni: '',
     name: '',
     surname: '',
     type: ''
   }
+  // Data inicial del formulario modal
   initialData: Driver = {
     dni: '',
     id: 0,
     name: '',
     surname: '',
-    type_id: 0,
+    type_id: '',
     type: ''
   }
 
+  // Validadores de todos los campos del formulario modal
   errorMessagesValidator: any = {
     dni: (name:string) => this.validateCC(name),
     name: (name:string) => this.validateName(name),
     surname: (name:string) => this.validateName(name),
     type_id: (name:string) => this.validateType(name)
   }
+  // Inicializo el formulario con la data inicial
   selected: Driver = this.initialData
 
+  // Datos del formulario
   formData: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
     dni: new FormControl('', [Validators.required, cedulaEcuatorianaValidator()]),
@@ -67,9 +87,17 @@ export class DriversComponent implements OnInit {
   }
 
   receiveData(data: any) {
+    this.formTitle = 'Editar'
     this.isVisible = true
     this.selected = data
     this.formData.setValue(data)
+  }
+
+  showFormAddRegister() {
+    this.formTitle = 'Agregar'
+    this.isVisible = true
+    this.selected = this.initialData
+    this.formData.setValue(this.initialData)
   }
 
   closeModal() {
@@ -157,14 +185,43 @@ export class DriversComponent implements OnInit {
     this.cdr.markForCheck()
   }
 
+  prepareToSend() {
+    this.enableAlertModal(
+      "Atención",
+      '¿Desea actualizar este registro?',
+      'info',
+      () => this.sendData(),
+      () => this.modalAlert.isVisible = false
+    )
+    this.modalAlert.isVisible = true
+  }
+
+  enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
+    this.modalAlert.title = title
+    this.modalAlert.message = message
+    this.modalAlert.icon = icon
+    this.modalAlert.actions.accept = accept
+    this.modalAlert.actions.cancel = cancel
+    this.modalAlert.isVisible = true
+    this.cdr.markForCheck()
+  }
+
   sendData() {
+    this.modalAlert.isVisible = false
     if(this.formData.valid) {
       this.restApi.doPost(`${this.path}/update`, this.formData.value).subscribe((data:any) => {
+        if(data.result[0]) {
+          this.enableAlertModal(
+            "Hecho",
+            'Datos actualizados correctamente',
+            'done',
+            () => this.resetForm(),
+            () => this.resetForm()
+          )
+          this.hasChanged = true
+        }
         console.log(data);
-
       })
-      console.log(this.formData.value);
-
     }
   }
 
@@ -172,6 +229,8 @@ export class DriversComponent implements OnInit {
     this.formData.reset()
     this.formData.get('type_id')?.setValue('')
     this.isVisible = false
+    this.modalAlert.isVisible = false
+    this.hasChanged = false
     Object.keys(this.errors).forEach((key:string) => {
       this.errors[key] = ''
     })

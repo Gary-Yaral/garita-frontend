@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CAMERA_PATH } from 'src/app/config/constants';
-import { Driver, driverKey } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { Paginator } from 'src/app/utilities/paginator';
 
@@ -10,14 +9,16 @@ import { Paginator } from 'src/app/utilities/paginator';
   templateUrl: './table-common.component.html',
   styleUrls: ['./table-common.component.css']
 })
-export class TableCommonComponent {
+export class TableCommonComponent implements OnInit, OnChanges {
   @Input() sectionName: string = '';
   @Input() path: string = '';
   @Input() pathLoads: string = '';
   @Input() theads: string[] = [];
   @Input() fields: string[] = [];
+  @Input() wasUpdated: boolean = false;
 
   @Output() sendDataEvent = new EventEmitter<any>();
+  @Output() newRegister = new EventEmitter<any>();
 
   table: Paginator = new Paginator()
   items: any[] = []
@@ -31,8 +32,21 @@ export class TableCommonComponent {
 
   lifeUrl: string = CAMERA_PATH
   constructor(
-    private restApi: RestApiService
+    private restApi: RestApiService,
+    private cdr: ChangeDetectorRef
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['wasUpdated']) {
+      if(changes['wasUpdated'].currentValue) {
+        if(this.search.get('filter')?.value === '') {
+          this.getItems()
+        } else {
+          this.getItemsByFilter()
+        }
+      }
+    }
+  }
+
   ngOnInit(): void {
     this.table.path = this.path
     this.table.pathLoads = this.pathLoads
@@ -125,6 +139,7 @@ export class TableCommonComponent {
           })
           this.items = data.result[1]
           this.table.setTotal(data.result[2].total)
+          this.cdr.markForCheck()
         }
       }
     })
@@ -143,6 +158,10 @@ export class TableCommonComponent {
   changePage(n:number) {
     this.table.setCurrentPage(n)
     this.filterData(true)
+  }
+
+  showFormNew() {
+    this.newRegister.emit()
   }
 
   updateRow(item: any) {

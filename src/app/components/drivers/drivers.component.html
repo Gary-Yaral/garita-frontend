@@ -5,13 +5,15 @@
   [path]= "path"
   [theads]= "theads"
   [fields]= "fields"
+  [wasUpdated]="hasChanged"
+  (newRegister)="showFormAddRegister()"
   (sendDataEvent)="receiveData($event)"></app-table-common>
   <div class="modal-form {{!isVisible ? 'hidden': ''}}">
     <form [formGroup]="formData">
       <div class="close-form" (click)="closeModal()">
         <i class="fa-solid fa-xmark"></i>
       </div>
-      <h2 class="modal-title">Editar</h2>
+      <h2 class="modal-title">{{formTitle}}</h2>
       <div class="modal-input-block">
         <label for="">Cédula</label>
         <input type="text" name="dni" formControlName="dni" (input)="detectChange($event)">
@@ -32,14 +34,20 @@
         <select  name="type_id" formControlName="type_id" (change)="detectChange($event)">
           <option value="">Escoja el tipo</option>
           <option *ngFor="let type of types" value="{{type.id}}">{{type.name | titlecase}}</option>
-          <option value="2">B</option>
         </select>
         <sub class="error-form" *ngIf="errors['type_id'] !== ''">{{errors['type_id']}}</sub>
       </div>
       <div class="btns-form-modal">
-        <button (click)="sendData()">Guardar</button>
-        <button (click)="resetForm()">Cancelar</button>
+        <button class="btn-modal-ok" (click)="prepareToSend()">Guardar</button>
+        <button class="btn-modal-cancel" (click)="resetForm()">Cancelar</button>
       </div>
     </form>
   </div>
+  <app-alert
+    [title]="modalAlert.title"
+    *ngIf="modalAlert.isVisible"
+    [message]="modalAlert.message"
+    [icon]="modalAlert.icon"
+    (agree)="modalAlert.actions.accept()"
+    (cancel)="modalAlert.actions.cancel()"></app-alert>
 </section>

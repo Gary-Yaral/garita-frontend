@@ -1,0 +1,18 @@
+<div id="{{modalId}}" class="alert-component" (click)="onCancel($event)">
+  <div class="alert-component-block">
+    <div class="alert-title">
+      <h2 class="alert-title-text">{{ title }}</h2>
+      <i *ngIf="icon==='done'" class="fa-regular fa-circle-check alert-done"></i>
+      <i *ngIf="icon==='info'" class="fa-solid fa-circle-info alert-info"></i>
+      <i *ngIf="icon==='danger'" class="fa-solid fa-circle-exclamation alert-danger"></i>
+      <i *ngIf="icon==='error'" class="fa-regular fa-circle-xmark alert-error"></i>
+    </div>
+    <div class="alert-content">
+      <p>{{ message }}</p>
+    </div>
+    <div class="alert-actions">
+      <button class="btn-alert btn-alert-accept" (click)="onAcept()">Aceptar</button>
+      <button id="{{cancelId}}" class="btn-alert btn-alert-cancel" (click)="onCancel($event)">Cancelar</button>
+    </div>
+  </div>
+</div>

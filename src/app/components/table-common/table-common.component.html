@@ -1,6 +1,6 @@
 <section class="section-container">
   <h1 class="section-title">{{sectionName}}</h1>
- <button class="btn_add">Agregar</button>
+ <button class="btn_add" (click)="showFormNew()">Agregar</button>
  <main class="main-paginator">
    <div class="table-filters">
      <form class="per-page-container" [formGroup]="perPage">
@@ -15,17 +15,15 @@
        <input id= "search" type="search" name="q" autocomplete="off" formControlName="filter" (input)="onInput($event)">
      </form>
    </div>
+   <div class="not-results" *ngIf="items.length === 0">No hay resultados</div>
    <div class="table-container">
-     <table class="table-registers">
+     <table class="table-registers" *ngIf="items.length > 0">
        <thead>
          <tr>
            <th *ngFor="let thead of theads; let i = index;" class="{{i===0 && items.length !==0 ? 'th-sticky':''}}">{{thead}}</th>
          </tr>
        </thead>
-       <tbody *ngIf="items.length > 0">
-         <tr *ngIf="items.length === 0">
-           <td class="sticky-even" colspan="20">No hay resultados</td>
-         </tr>
+       <tbody>
          <tr *ngFor="let item of items; let i = index;">
            <td *ngFor="let field of fields" class="{{field === 'index' ? (((i+1)%2) === 0 ? 'column-sticky sticky-even':'column-sticky sticky-odd'): ''}}">{{item[field]}}</td>
            <td>
