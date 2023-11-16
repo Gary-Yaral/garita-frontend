@@ -6,11 +6,12 @@
   [theads]= "theads"
   [fields]= "fields"
   [wasUpdated]="hasChanged"
-  (newRegister)="showFormAddRegister()"
-  (sendDataEvent)="receiveData($event)"></app-table-common>
+  (prepareFormToAdd)="prepareFormToAdd()"
+  (prepareFormToUpdate)="prepareFormToUpdate($event)"
+  (prepareToDelete)="prepareToDelete($event)"></app-table-common>
   <div class="modal-form {{!isVisible ? 'hidden': ''}}">
     <form [formGroup]="formData">
-      <div class="close-form" (click)="closeModal()">
+      <div class="close-form" (click)="resetFormAndClose()">
         <i class="fa-solid fa-xmark"></i>
       </div>
       <h2 class="modal-title">{{formTitle}}</h2>
@@ -38,9 +39,11 @@
         <sub class="error-form" *ngIf="errors['type_id'] !== ''">{{errors['type_id']}}</sub>
       </div>
       <div class="btns-form-modal">
-        <button class="btn-modal-ok" (click)="prepareToSend()">Guardar</button>
-        <button class="btn-modal-cancel" (click)="resetForm()">Cancelar</button>
+        <button *ngIf="!newRegister" class="btn-modal-ok" (click)="prepareToUpdate()">Guardar</button>
+        <button *ngIf="newRegister" class="btn-modal-ok" (click)="prepareToAdd()">Guardar</button>
+        <button class="btn-modal-cancel" (click)="resetFormAndClose()">Cancelar</button>
       </div>
+      <sub *ngIf="areErrors" class="error-form">Complete todos los campos correctamente</sub>
     </form>
   </div>
   <app-alert

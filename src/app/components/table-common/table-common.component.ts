@@ -17,8 +17,9 @@ export class TableCommonComponent implements OnInit, OnChanges {
   @Input() fields: string[] = [];
   @Input() wasUpdated: boolean = false;
 
-  @Output() sendDataEvent = new EventEmitter<any>();
-  @Output() newRegister = new EventEmitter<any>();
+  @Output() prepareFormToUpdate = new EventEmitter<any>();
+  @Output() prepareFormToAdd = new EventEmitter<any>();
+  @Output() prepareToDelete = new EventEmitter<any>();
 
   table: Paginator = new Paginator()
   items: any[] = []
@@ -160,17 +161,21 @@ export class TableCommonComponent implements OnInit, OnChanges {
     this.filterData(true)
   }
 
-  showFormNew() {
-    this.newRegister.emit()
+  openFormToAdd() {
+    this.prepareFormToAdd.emit()
   }
 
-  updateRow(item: any) {
+  openFormToUpdate(item: any) {
     const clone = {...item}
     if(clone.index) {
       delete clone.index
     }
 
-    this.sendDataEvent.emit(clone);
+    this.prepareFormToUpdate.emit(clone);
+  }
+
+  askToDelete(item: any) {
+    this.prepareToDelete.emit(item.id)
   }
 }
 

@@ -1,6 +1,6 @@
 <section class="section-container">
   <h1 class="section-title">{{sectionName}}</h1>
- <button class="btn_add" (click)="showFormNew()">Agregar</button>
+ <button class="btn_add" (click)="openFormToAdd()">Agregar</button>
  <main class="main-paginator">
    <div class="table-filters">
      <form class="per-page-container" [formGroup]="perPage">
@@ -28,8 +28,8 @@
            <td *ngFor="let field of fields" class="{{field === 'index' ? (((i+1)%2) === 0 ? 'column-sticky sticky-even':'column-sticky sticky-odd'): ''}}">{{item[field]}}</td>
            <td>
              <div class="table-btns">
-               <button class="table-btn-edit" (click)="updateRow(item)"><i class="fa-solid fa-pen-to-square"></i></button>
-               <button class="table-btn-delete"><i class="fa-solid fa-trash"></i></button>
+               <button class="table-btn-edit" (click)="openFormToUpdate(item)"><i class="fa-solid fa-pen-to-square"></i></button>
+               <button class="table-btn-delete" (click)="askToDelete(item)"><i class="fa-solid fa-trash"></i></button>
              </div>
            </td>
          </tr>

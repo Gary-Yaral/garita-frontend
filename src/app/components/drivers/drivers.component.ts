@@ -21,7 +21,9 @@ export class DriversComponent implements OnInit {
   hasChanged = false // Propiedad para refresh tabla
   isVisible:boolean = false // Propiedad para ocultar o mostrar formulario
   types: DriverType[] = [] // Lista de typos de choferes
-  formTitle: string = ''
+  formTitle: string = '' // Titulo que tendrá el formulario
+  areErrors: boolean = false // Si hay errores con los campos al enviar
+  newRegister: boolean = false; // Si el formulario es o no para agregar nuevo
 
   // Datos para poder usar la ventana de alerta
   modalAlert: any = {
@@ -47,7 +49,7 @@ export class DriversComponent implements OnInit {
     name: '',
     surname: '',
     type_id: '',
-    type: ''
+    type: 'none'
   }
 
   // Validadores de todos los campos del formulario modal
@@ -86,26 +88,35 @@ export class DriversComponent implements OnInit {
     })
   }
 
-  receiveData(data: any) {
+  /* Funcion para preparar las ventanas modal */
+  enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
+    this.modalAlert.title = title
+    this.modalAlert.message = message
+    this.modalAlert.icon = icon
+    this.modalAlert.actions.accept = accept
+    this.modalAlert.actions.cancel = cancel
+    this.modalAlert.isVisible = true
+    this.cdr.markForCheck()
+  }
+
+  /* Prepara los datos que serán actualizados y muestra el formulario editar */
+  prepareFormToUpdate(data: any) {
     this.formTitle = 'Editar'
     this.isVisible = true
     this.selected = data
     this.formData.setValue(data)
   }
 
-  showFormAddRegister() {
+  /* Limpia el formulario para ingresar nuevos datos y lo muestra */
+  prepareFormToAdd() {
     this.formTitle = 'Agregar'
     this.isVisible = true
     this.selected = this.initialData
     this.formData.setValue(this.initialData)
+    this.newRegister = true
   }
 
-  closeModal() {
-    this.isVisible = false
-    this.selected = this.initialData
-
-  }
-
+  /* Validaciones individuales de los campos */
   validateCC(name: string) {
     const input = this.formData.get(name)
     if (input?.value === "") {
@@ -179,34 +190,48 @@ export class DriversComponent implements OnInit {
     this.errors[name] = ""
   }
 
+  /* Detecta cuando estamos escribriendo en los campos del formulario */
   detectChange(event: any) {
     const name = event.target.name
     this.errorMessagesValidator[name](name)
-    this.cdr.markForCheck()
+    this.cdr.markForCheck() // Actualiza la interfaz para mostrar los errores
   }
 
-  prepareToSend() {
+  /* Carga los datos del formulario de agregar nuevo */
+  prepareToAdd() {
+    this.enableAlertModal(
+      "Atención",
+      '¿Desea guardar este registro?',
+      'info',
+      () => this.addData(),
+      () => this.modalAlert.isVisible = false
+    )
+  }
+
+  /* Carga los datos del formulario de editar registro */
+  prepareToUpdate() {
     this.enableAlertModal(
       "Atención",
       '¿Desea actualizar este registro?',
       'info',
-      () => this.sendData(),
+      () => this.updateData(),
       () => this.modalAlert.isVisible = false
     )
-    this.modalAlert.isVisible = true
   }
 
-  enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
-    this.modalAlert.title = title
-    this.modalAlert.message = message
-    this.modalAlert.icon = icon
-    this.modalAlert.actions.accept = accept
-    this.modalAlert.actions.cancel = cancel
-    this.modalAlert.isVisible = true
-    this.cdr.markForCheck()
+  /* Carga el id del registro que se desea eliminar */
+  prepareToDelete(id:string | number) {
+    this.enableAlertModal(
+      "Atención",
+      '¿Desea eliminar este registro?',
+      'danger',
+      () =>this.deleteData(id),
+      () => this.modalAlert.isVisible = false
+    )
   }
 
-  sendData() {
+  /* Actualiza los datos de un registro de las base de datos*/
+  updateData() {
     this.modalAlert.isVisible = false
     if(this.formData.valid) {
       this.restApi.doPost(`${this.path}/update`, this.formData.value).subscribe((data:any) => {
@@ -215,22 +240,86 @@ export class DriversComponent implements OnInit {
             "Hecho",
             'Datos actualizados correctamente',
             'done',
-            () => this.resetForm(),
-            () => this.resetForm()
+            () => this.resetFormAndClose(),
+            () => this.resetFormAndClose()
           )
           this.hasChanged = true
+        } else {
+          this.enableAlertModal(
+            "Error",
+            data.result[1].error,
+            'error',
+            () => {this.modalAlert.isVisible = false},
+            () => {this.modalAlert.isVisible = false},
+          )
         }
-        console.log(data);
       })
+    } else {
+      this.areErrors = true
     }
   }
 
-  resetForm() {
+  /* Añade nuevo registro en la base de datos */
+  addData() {
+    this.modalAlert.isVisible = false
+    if(this.formData.valid) {
+      this.restApi.doPost(`${this.path}/new`, this.formData.value).subscribe((data:any) => {
+        if(data.result[0]) {
+          this.enableAlertModal(
+            "Hecho",
+            'Registro agregado correctamente',
+            'done',
+            () => this.resetFormAndClose(),
+            () => this.resetFormAndClose()
+          )
+          this.hasChanged = true
+          this.areErrors = false
+        } else{
+          this.enableAlertModal(
+            "Error",
+            data.result[1].error,
+            'error',
+            () => {this.modalAlert.isVisible = false},
+            () => {this.modalAlert.isVisible = false},
+          )
+        }
+      })
+    } else {
+      this.areErrors = true
+    }
+  }
+
+  /* Elimina registro en la base de datos */
+  deleteData(id:string | number) {
+    this.modalAlert.isVisible = false
+    this.areErrors = true
+    this.restApi.doPost(`${this.path}/delete`, {id}).subscribe((data:any) => {
+      console.log(data);
+
+      if(data.result[0]) {
+        this.enableAlertModal(
+          "Hecho",
+          'Registro eliminado correctamente',
+          'done',
+          () => this.resetFormAndClose(),
+          () => this.resetFormAndClose()
+        )
+        this.hasChanged = true
+        this.areErrors = false
+      }
+    })
+  }
+
+  /* Limpiar el formulario luego de realizar acción */
+  resetFormAndClose() {
     this.formData.reset()
     this.formData.get('type_id')?.setValue('')
     this.isVisible = false
     this.modalAlert.isVisible = false
     this.hasChanged = false
+    this.newRegister = false
+    this.selected = this.initialData
+    this.areErrors = false
     Object.keys(this.errors).forEach((key:string) => {
       this.errors[key] = ''
     })
