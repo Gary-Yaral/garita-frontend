@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { cedulaEcuatorianaValidator } from 'src/app/utilities/functions';
 
 @Component({
   selector: 'app-vehicles',
@@ -260,6 +259,8 @@ export class VehiclesComponent implements OnInit {
    /* Actualiza los datos de un registro de las base de datos*/
    updateData() {
      this.modalAlert.isVisible = false
+     console.log(this.formData.value);
+
      if(this.formData.valid) {
        this.restApi.doPost(`${this.path}/update`, this.formData.value).subscribe((data:any) => {
          if(data.result[0]) {
