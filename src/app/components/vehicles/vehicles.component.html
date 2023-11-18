@@ -5,29 +5,58 @@
   [path]= "path"
   [theads]= "theads"
   [fields]= "fields"
-  (sendDataEvent)="receiveData($event)"></app-table-common>
-<!--   <div class="modal-form {{!isVisible ? 'hidden': ''}}">
-    <form>
-      <div>
-        <label for=""></label>
-        <input type="text">
-        <sub class="error">Data incorrecta</sub>
+  [wasUpdated]="hasChanged"
+  (prepareFormToAdd)="prepareFormToAdd()"
+  (prepareFormToUpdate)="prepareFormToUpdate($event)"
+  (prepareToDelete)="prepareToDelete($event)"></app-table-common>
+  <div class="modal-form {{!isVisible ? 'hidden': ''}}">
+    <form [formGroup]="formData">
+      <div class="close-form" (click)="resetFormAndClose()">
+        <i class="fa-solid fa-xmark"></i>
       </div>
-      <div>
-        <label for=""></label>
-        <input type="text">
-        <sub class="error">Data incorrecta</sub>
+      <h2 class="modal-title">{{formTitle}}</h2>
+      <div class="modal-input-block">
+        <label for="">Placa</label>
+        <input type="text" name="plate_number" formControlName="plate_number" (input)="detectChange($event)">
+        <sub class="error-form" *ngIf="errors['plate_number'] !== ''">{{errors['plate_number']}}</sub>
       </div>
-      <div>
-        <label for=""></label>
-        <input type="text">
-        <sub class="error">Data incorrecta</sub>
+      <div class="modal-input-block">
+        <label for="">Tipo de Acceso</label>
+        <select  name="access_type_id" formControlName="access_type_id" (change)="detectChange($event)">
+          <option value="">Escoja el tipo</option>
+          <option *ngFor="let type of access_types" value="{{type.id}}">{{type.name | titlecase}}</option>
+        </select>
+        <sub class="error-form" *ngIf="errors['access_type_id'] !== ''">{{errors['access_type_id']}}</sub>
       </div>
-      <div>
-        <label for=""></label>
-        <input type="text">
-        <sub class="error">Data incorrecta</sub>
+      <div class="modal-input-block">
+        <label for="">Tipo de Vehículo</label>
+        <select  name="vehicle_type_id" formControlName="vehicle_type_id" (change)="detectChange($event)">
+          <option value="">Escoja el tipo</option>
+          <option *ngFor="let type of vehicle_types" value="{{type.id}}">{{type.name | titlecase}}</option>
+        </select>
+        <sub class="error-form" *ngIf="errors['vehicle_type_id'] !== ''">{{errors['vehicle_type_id']}}</sub>
       </div>
+      <div class="modal-input-block">
+        <label for="">Estado de Vehículo</label>
+        <select  name="status_type_id" formControlName="status_type_id" (change)="detectChange($event)">
+          <option value="">Escoja el tipo</option>
+          <option *ngFor="let type of status_types" value="{{type.id}}">{{type.name | titlecase}}</option>
+        </select>
+        <sub class="error-form" *ngIf="errors['status_type_id'] !== ''">{{errors['status_type_id']}}</sub>
+      </div>
+      <div class="btns-form-modal">
+        <button *ngIf="!newRegister" class="btn-modal-ok" (click)="prepareToUpdate()">Guardar</button>
+        <button *ngIf="newRegister" class="btn-modal-ok" (click)="prepareToAdd()">Guardar</button>
+        <button class="btn-modal-cancel" (click)="resetFormAndClose()">Cancelar</button>
+      </div>
+      <sub *ngIf="areErrors" class="error-form">Complete todos los campos correctamente</sub>
     </form>
-  </div> -->
+  </div>
+  <app-alert
+    [title]="modalAlert.title"
+    *ngIf="modalAlert.isVisible"
+    [message]="modalAlert.message"
+    [icon]="modalAlert.icon"
+    (agree)="modalAlert.actions.accept()"
+    (cancel)="modalAlert.actions.cancel()"></app-alert>
 </section>

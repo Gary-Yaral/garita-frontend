@@ -10,14 +10,19 @@ export interface UserData {
 }
 
 export interface Vehicle {
-  id?: number,
+  id: number,
   plate_number: string,
-  access_type_id?: number,
+  access_type_id: number | string,
   access_type_name?: string,
-  status_type_id?: number,
+  status_type_id: number | string,
   status_type_name?: string,
-  vehicle_type_id?: number,
+  vehicle_type_id: number | string,
   vehicle_type_name?: string,
+}
+
+export interface VehicleType {
+  id: string,
+  name: string
 }
 
 export interface Driver {
