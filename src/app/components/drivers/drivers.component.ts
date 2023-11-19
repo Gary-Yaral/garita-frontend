@@ -14,7 +14,7 @@ export class DriversComponent implements OnInit {
   /** PROPIEDADES DE LA TABLA */
   sectionName:string = 'Choferes'
   path: string = 'http://localhost:4000/driver'
-  theads: string[] = ['N°', 'Cédula', 'Apellidos', 'Nombres', 'Tipo', ' Opciones']
+  theads: string[] = ['N°', 'Cédula', 'Nombres', 'Apellidos', 'Tipo', ' Opciones']
   fields: string[] = ['index','dni','name', 'surname', 'type']
 
   /** PROPIEDADES DEL COMPONENTE */

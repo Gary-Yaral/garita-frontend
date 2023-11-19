@@ -14,9 +14,13 @@ import { StorageService } from 'src/app/services/storage.service';
 export class FloatNavbarComponent {
   user: UserData = {
     id: 0,
-    name: "",
-    surname: "",
-    dni: ""
+    name: '',
+    surname: '',
+    dni: '',
+    password: '',
+    username: '',
+    user_status: false,
+
   }
   sysName: string = SYSTEM_NAME
   views: pathObject[] = VIEWS

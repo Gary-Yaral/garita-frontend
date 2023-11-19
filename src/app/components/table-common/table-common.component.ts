@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CAMERA_PATH } from 'src/app/config/constants';
 import { RestApiService } from 'src/app/services/rest-api.service';
@@ -9,7 +9,7 @@ import { Paginator } from 'src/app/utilities/paginator';
   templateUrl: './table-common.component.html',
   styleUrls: ['./table-common.component.css']
 })
-export class TableCommonComponent implements OnInit, OnChanges {
+export class TableCommonComponent implements OnChanges, AfterViewInit {
   @Input() sectionName: string = '';
   @Input() path: string = '';
   @Input() pathLoads: string = '';
@@ -36,6 +36,16 @@ export class TableCommonComponent implements OnInit, OnChanges {
     private restApi: RestApiService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  // Inicializamos la tabla luego de que los componente carguen
+  ngAfterViewInit(): void {
+    this.table.path = this.path
+    this.table.pathLoads = this.pathLoads
+    this.perPage.get('number')?.setValue(this.table.perPages[0])
+    this.table.currentPage = 1
+    this.getItems()
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['wasUpdated']) {
       if(changes['wasUpdated'].currentValue) {
@@ -46,14 +56,6 @@ export class TableCommonComponent implements OnInit, OnChanges {
         }
       }
     }
-  }
-
-  ngOnInit(): void {
-    this.table.path = this.path
-    this.table.pathLoads = this.pathLoads
-    this.perPage.get('number')?.setValue(this.table.perPages[0])
-    this.table.currentPage = 1
-    this.getItems()
   }
 
   // Evento cuando cambia el número de registros por página
@@ -109,6 +111,8 @@ export class TableCommonComponent implements OnInit, OnChanges {
       `${this.table.path}/load`,
       dataToSend
     ).subscribe((data: any) => {
+      console.log(data);
+
       if(!data.error) {
         if(data.result[0] === true) {
           data.result[1].map((el:any, i:number) => {

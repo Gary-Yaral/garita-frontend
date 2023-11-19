@@ -6,7 +6,10 @@ export interface UserData {
   id: string | number,
   name: string,
   surname: string,
-  dni: string
+  dni: string,
+  username: string,
+  password: string,
+  user_status: boolean
 }
 
 export interface Vehicle {
