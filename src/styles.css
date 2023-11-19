@@ -88,7 +88,7 @@ body {
 .modal-form {
   display: flex;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.421);
   position: fixed;
   z-index: 1000;
@@ -127,6 +127,14 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: .5rem;
+}
+
+.modal-input-check-block {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
   gap: .5rem;
 }
 

@@ -16,33 +16,41 @@
       </div>
       <h2 class="modal-title">{{formTitle}}</h2>
       <div class="modal-input-block">
-        <label for="">Placa</label>
-        <input type="text" name="plate_number" formControlName="plate_number" (input)="detectChange($event)">
-        <sub class="error-form" *ngIf="errors['plate_number'] !== ''">{{errors['plate_number']}}</sub>
+        <label for="">Cédula</label>
+        <input type="text" name="dni" formControlName="dni" (input)="detectChange($event)">
+        <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
       </div>
       <div class="modal-input-block">
-        <label for="">Tipo de Acceso</label>
-        <select  name="access_type_id" formControlName="access_type_id" (change)="detectChange($event)">
-          <option value="">Escoja el tipo</option>
-          <option *ngFor="let type of access_types" value="{{type.id}}">{{type.name | titlecase}}</option>
-        </select>
-        <sub class="error-form" *ngIf="errors['access_type_id'] !== ''">{{errors['access_type_id']}}</sub>
+        <label for="">Nombres</label>
+        <input type="text" name="name" formControlName="name" (input)="detectChange($event)">
+        <sub class="error-form" *ngIf="errors['name'] !== ''">{{errors['name']}}</sub>
       </div>
       <div class="modal-input-block">
-        <label for="">Tipo de Vehículo</label>
-        <select  name="vehicle_type_id" formControlName="vehicle_type_id" (change)="detectChange($event)">
-          <option value="">Escoja el tipo</option>
-          <option *ngFor="let type of vehicle_types" value="{{type.id}}">{{type.name | titlecase}}</option>
-        </select>
-        <sub class="error-form" *ngIf="errors['vehicle_type_id'] !== ''">{{errors['vehicle_type_id']}}</sub>
+        <label for="">Apellidos</label>
+        <input type="text" name="surname" formControlName="surname" (input)="detectChange($event)">
+        <sub class="error-form" *ngIf="errors['surname'] !== ''">{{errors['surname']}}</sub>
       </div>
       <div class="modal-input-block">
-        <label for="">Estado de Vehículo</label>
-        <select  name="status_type_id" formControlName="status_type_id" (change)="detectChange($event)">
-          <option value="">Escoja el tipo</option>
+        <label for="">Usuario</label>
+        <input type="text" name="username" formControlName="username" (input)="detectChange($event)">
+        <sub class="error-form" *ngIf="errors['username'] !== ''">{{errors['username']}}</sub>
+      </div>
+      <div class="modal-input-block">
+        <label for="">Estado</label>
+        <select  name="user_status_id" formControlName="user_status_id" (change)="detectChange($event)">
+          <option value="">Escoja el estado</option>
           <option *ngFor="let type of status_types" value="{{type.id}}">{{type.name | titlecase}}</option>
         </select>
-        <sub class="error-form" *ngIf="errors['status_type_id'] !== ''">{{errors['status_type_id']}}</sub>
+        <sub class="error-form" *ngIf="errors['user_status_id'] !== ''">{{errors['user_status_id']}}</sub>
+      </div>
+      <div class="modal-input-check-block">
+        <label for="">Deseo actualizar mi contraseña</label>
+        <input type="checkbox" (change)="showPasswordField($event)">
+      </div>
+      <div *ngIf="passWillBeUpdated" class="modal-input-block">
+        <label for="">Contraseña</label>
+        <input type="text" name="password" formControlName="password" (input)="detectChange($event)">
+        <sub class="error-form" *ngIf="errors['password'] !== ''">{{errors['password']}}</sub>
       </div>
       <div class="btns-form-modal">
         <button *ngIf="!newRegister" class="btn-modal-ok" (click)="prepareToUpdate()">Guardar</button>

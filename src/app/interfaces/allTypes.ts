@@ -7,9 +7,10 @@ export interface UserData {
   name: string,
   surname: string,
   dni: string,
-  username: string,
-  password: string,
-  user_status: boolean
+  username?: string,
+  password?: string,
+  user_status_id?: number | string
+  user_status?: boolean
 }
 
 export interface Vehicle {
@@ -37,7 +38,12 @@ export interface Driver {
   type: String
 }
 
-export type DriverType = {
+export interface DriverType {
+  id: number,
+  name: string
+}
+
+export interface StatusType {
   id: number,
   name: string
 }

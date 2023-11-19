@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
+import { StatusType, UserData, Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
+import { cedulaEcuatorianaValidator } from 'src/app/utilities/functions';
+import { nameRegex } from 'src/app/utilities/regExp';
 
 @Component({
   selector: 'app-users',
@@ -12,9 +14,10 @@ export class UsersComponent {
    /** PROPIEDADES DE LA TABLA */
    sectionName:string = 'Usuarios'
    path: string = 'http://localhost:4000/user'
-   theads: string[] = ['N°', 'Nombre', 'Apellidos', 'Usuario', 'Estado', ' Opciones']
+   theads: string[] = ['N°', 'Cédula', 'Nombre', 'Apellidos', 'Usuario', 'Estado', ' Opciones']
    fields: string[] = [
      'index',
+     'dni',
      'name',
      'surname',
      'username',
@@ -24,12 +27,11 @@ export class UsersComponent {
    /** PROPIEDADES DEL COMPONENTE */
    hasChanged = false // Propiedad para refresh tabla
    isVisible:boolean = false // Propiedad para ocultar o mostrar formulario
-   vehicle_types: VehicleType[] = [] // Lista de typos de choferes
-   access_types: VehicleType[] = [] // Lista de typos de choferes
-   status_types: VehicleType[] = [] // Lista de typos de choferes
+   status_types: StatusType[] = [] // Lista de typos de choferes
    formTitle: string = '' // Titulo que tendrá el formulario
    areErrors: boolean = false // Si hay errores con los campos al enviar
    newRegister: boolean = false; // Si el formulario es o no para agregar nuevo
+   passWillBeUpdated: boolean = false
 
    // Datos para poder usar la ventana de alerta
    modalAlert: any = {
@@ -41,41 +43,50 @@ export class UsersComponent {
        cancel: () => {}
      }
    }
+
     // Datos para los mensajes de error del formulario modal
    errors: any = {
-     plate_number: '',
-     access_type_id: '',
-     vehicle_type_id: '',
-     status_type_id: ''
-   }
-    // Data inicial del formulario modal
-   initialData: Vehicle = {
-     id: 0,
-     plate_number: '',
-     access_type_id: '',
-     status_type_id: '',
-     vehicle_type_id: '',
-   }
+    dni:'',
+    name: '',
+    surname: '',
+    username: '',
+    password: '',
+    user_status_id: ''
+  }
+  // Data inicial del formulario modal
+  initialData: UserData = {
+    id: 0,
+    dni: '',
+    name: '',
+    surname: '',
+    username: '',
+    password: '',
+    user_status_id: ''
+  }
 
    // Validadores de todos los campos del formulario modal
-   errorMessagesValidator: any = {
-   plate_number: (name:string) => this.validatePlate(name),
-   access_type_id: (name:string) => this.validateAccessType(name),
-   vehicle_type_id: (name:string) => this.validateVehicleType(name),
-   status_type_id: (name:string) => this.validateStatusType(name)
-   }
-   // Inicializo el formulario con la data inicial
-   selected: Vehicle = this.initialData
-   // Patron para validar las placas
-   platePattern: RegExp = /^[A-Z]{3}-\d{3,4}$/
+  errorMessagesValidator: any = {
+    dni: (name:string) => this.validatePlate(name),
+    name: (name:string) => this.validateAccessType(name),
+    surname: (name:string) => this.validateVehicleType(name),
+    username: (name:string) => this.validateStatusType(name),
+    password: (name:string) => this.validateStatusType(name),
+    user_status_id: (name:string) => this.validateStatusType(name)
+  }
+  // Inicializo el formulario con la data inicial
+  selected: UserData = this.initialData
+  // Patron para validar las placas
+  platePattern: RegExp = /^[A-Z]{3}-\d{3,4}$/
 
    // Datos del formulario
    formData: FormGroup = new FormGroup({
      id: new FormControl('', Validators.required),
-     plate_number: new FormControl('', [Validators.required, Validators.pattern(this.platePattern)]),
-     access_type_id: new FormControl('', Validators.required),
-     vehicle_type_id: new FormControl('', Validators.required),
-     status_type_id: new FormControl('', Validators.required)
+     dni: new FormControl('', [Validators.required, cedulaEcuatorianaValidator()]),
+     name: new FormControl('', [Validators.required, Validators.pattern(nameRegex)]),
+    surname: new FormControl('', [Validators.required, Validators.pattern(nameRegex)]),
+     username: new FormControl('', Validators.required),
+     password: new FormControl('', Validators.required),
+     user_status_id: new FormControl('', Validators.required)
    })
 
    constructor(
@@ -83,37 +94,11 @@ export class UsersComponent {
      private cdr: ChangeDetectorRef) {}
 
    ngOnInit(): void {
-     this.loadVehicleTypes()
-     this.loadAccessTypes()
      this.loadStatusTypes()
    }
 
-   loadVehicleTypes() {
-     this.restApi.doGet(`${this.path}/types`).subscribe((data:any) => {
-       try {
-         if(data.result[0]) {
-           this.vehicle_types = data.result[1]
-         }
-       } catch (error) {
-         console.log(error);
-       }
-     })
-   }
-
-   loadAccessTypes() {
-     this.restApi.doGet(`${this.path}/access-types`).subscribe((data:any) => {
-       try {
-         if(data.result[0]) {
-           this.access_types = data.result[1]
-         }
-       } catch (error) {
-         console.log(error);
-       }
-     })
-   }
-
    loadStatusTypes() {
-     this.restApi.doGet(`${this.path}/status-types`).subscribe((data:any) => {
+     this.restApi.doGet(`${this.path}/types`).subscribe((data:any) => {
        try {
          if(data.result[0]) {
            this.status_types = data.result[1]
@@ -123,6 +108,7 @@ export class UsersComponent {
        }
      })
    }
+
 
     /* Funcion para preparar las ventanas modal */
     enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
@@ -135,19 +121,28 @@ export class UsersComponent {
       this.cdr.markForCheck()
     }
 
+    showPasswordField(event: any) {
+      if(event.target.checked) {
+        this.passWillBeUpdated = true
+      } else {
+        this.passWillBeUpdated = false
+      }
+    }
+
     /* Prepara los datos que serán actualizados y muestra el formulario editar */
    prepareFormToUpdate(data: any) {
-     this.formTitle = 'Editar'
-     this.isVisible = true
-     this.selected = data
      let clone = {
        id: data.id,
-       plate_number: data.plate_number,
-       access_type_id: data.access_type_id,
-       vehicle_type_id: data.vehicle_type_id,
-       status_type_id: data.status_type_id
-     }
-
+       dni: data.dni,
+       name: data.name,
+       surname: data.surname,
+       password: data.password,
+       username: data.username,
+       user_status_id: 1
+      }
+      this.formTitle = 'Editar'
+      this.isVisible = true
+      this.selected = data
       this.formData.setValue(clone)
    }
 
