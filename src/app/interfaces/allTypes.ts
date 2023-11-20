@@ -53,4 +53,11 @@ export interface FormDataStorage {
   exists: boolean
 }
 
+export type formTitle = 'Agregar'| 'Editar' | ''
+export interface FormTitle {
+  add: formTitle,
+  edit: formTitle,
+  none: formTitle
+}
+
 export type driverKey = keyof Driver;

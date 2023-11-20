@@ -111,8 +111,6 @@ export class TableCommonComponent implements OnChanges, AfterViewInit {
       `${this.table.path}/load`,
       dataToSend
     ).subscribe((data: any) => {
-      console.log(data);
-
       if(!data.error) {
         if(data.result[0] === true) {
           data.result[1].map((el:any, i:number) => {

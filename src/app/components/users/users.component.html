@@ -43,14 +43,18 @@
         </select>
         <sub class="error-form" *ngIf="errors['user_status_id'] !== ''">{{errors['user_status_id']}}</sub>
       </div>
-      <div class="modal-input-check-block">
+      <div *ngIf="formTitle === formTitles.edit" class="modal-input-check-block">
         <label for="">Deseo actualizar mi contraseña</label>
         <input type="checkbox" (change)="showPasswordField($event)">
       </div>
-      <div *ngIf="passWillBeUpdated" class="modal-input-block">
+      <div *ngIf="formTitle === formTitles.add || passWillBeUpdated" class="modal-input-block">
         <label for="">Contraseña</label>
-        <input type="text" name="password" formControlName="password" (input)="detectChange($event)">
+        <input type="{{ passWillBeShowed ? 'text':'password'}}" name="password" formControlName="password" (input)="detectChange($event)">
         <sub class="error-form" *ngIf="errors['password'] !== ''">{{errors['password']}}</sub>
+      </div>
+      <div *ngIf="passWillBeUpdated" class="modal-input-check-block">
+        <label for="">Mostrar contraseña</label>
+        <input type="checkbox" (change)="showPassword($event)">
       </div>
       <div class="btns-form-modal">
         <button *ngIf="!newRegister" class="btn-modal-ok" (click)="prepareToUpdate()">Guardar</button>

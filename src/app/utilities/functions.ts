@@ -45,6 +45,26 @@ export function cedulaEcuatorianaValidator(): ValidatorFn {
   };
 }
 
+export function passwordValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=\-{}[\]:;\"'<>?,./])\S{8,}$/;
 
+    if (!passwordRegex.test(control.value)) {
+      return { 'invalidPassword': true };
+    }
 
+    return null;
+  };
+}
 
+export function usernameValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=\-{}[\]:;\"'<>?,./])\S{8,}$/;
+
+    if (!passwordRegex.test(control.value)) {
+      return { 'invalidUsername': true };
+    }
+
+    return null;
+  };
+}
