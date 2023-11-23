@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { FormTitle, StatusType, UserData, formTitle } from 'src/app/interfaces/allTypes';
+import { FormTitle, RolType, StatusType, UserData, formTitle } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { FORM_TITLES } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaValidator, passwordValidator, usernameValidator } from 'src/app/utilities/functions';
@@ -15,13 +15,14 @@ export class UsersComponent {
   /** PROPIEDADES DE LA TABLA */
   sectionName:string = 'Usuarios'
   path: string = 'http://localhost:4000/user'
-  theads: string[] = ['N°', 'Cédula', 'Nombre', 'Apellidos', 'Usuario', 'Estado', ' Opciones']
+  theads: string[] = ['N°', 'Cédula', 'Nombre', 'Apellidos', 'Usuario', 'Rol', 'Estado', ' Opciones']
   fields: string[] = [
     'index',
     'dni',
     'name',
     'surname',
     'username',
+    'rol_name',
     'user_status_name'
   ]
 
@@ -29,6 +30,7 @@ export class UsersComponent {
   hasChanged = false // Propiedad para refresh tabla
   isVisible:boolean = false // Propiedad para ocultar o mostrar formulario
   status_types: StatusType[] = [] // Lista de typos de choferes
+  rol_types: RolType[] = [] // Lista de typos de choferes
   formTitle: formTitle = FORM_TITLES.none // Titulo que tendrá el formulario
   formTitles: FormTitle = FORM_TITLES // Titulo que tendrá el formulario
   areErrors: boolean = false // Si hay errores con los campos al enviar
@@ -54,7 +56,8 @@ export class UsersComponent {
     surname: '',
     username: '',
     password: '',
-    user_status_id: ''
+    user_status_id: '',
+    rol_id: ''
   }
 
   // Data inicial del formulario modal
@@ -65,7 +68,8 @@ export class UsersComponent {
     surname: '',
     username: '',
     password: '',
-    user_status_id: ''
+    user_status_id: '',
+    rol_id: ''
   }
 
    // Validadores de todos los campos del formulario modal
@@ -75,7 +79,8 @@ export class UsersComponent {
     surname: (name:string) => this.validateName(name),
     username: (name:string) => this.validateUsername(name),
     password: (name:string) => this.validatePassword(name),
-    user_status_id: (name:string) => this.validateStatusType(name)
+    user_status_id: (name:string) => this.validateStatusType(name),
+    rol_id: (name:string) => this.validateRol(name)
   }
   // Inicializo el formulario con la data inicial
   selected: UserData = this.initialData
@@ -90,7 +95,8 @@ export class UsersComponent {
   surname: new FormControl('', [Validators.required, Validators.pattern(nameRegex)]),
     username: new FormControl('', [Validators.required, usernameValidator()]),
     password: new FormControl('', [Validators.required, passwordValidator()]),
-    user_status_id: new FormControl('', Validators.required)
+    user_status_id: new FormControl('', Validators.required),
+    rol_id: new FormControl('', Validators.required)
   })
 
   constructor(
@@ -99,6 +105,7 @@ export class UsersComponent {
 
   ngOnInit(): void {
     this.loadStatusTypes()
+    this.loadRoles()
   }
 
   loadStatusTypes() {
@@ -112,6 +119,19 @@ export class UsersComponent {
       }
     })
   }
+
+  loadRoles() {
+    this.restApi.doGet(`${this.path}/roles`).subscribe((data:any) => {
+      try {
+        if(data.result[0]) {
+          this.rol_types = data.result[1]
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  }
+
 
   /* Funcion para preparar las ventanas modal */
   enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
@@ -151,7 +171,8 @@ export class UsersComponent {
       surname: data.surname,
       password: data.password,
       username: data.username,
-      user_status_id: data.user_status_id
+      user_status_id: data.user_status_id,
+      rol_id: data.rol_id
     }
     this.formTitle = FORM_TITLES.edit
     this.isVisible = true
@@ -297,6 +318,15 @@ export class UsersComponent {
     const input = this.formData.get(name)
     if (input?.value === "") {
       this.errors[name] = "Debes seleccionar el estado"
+      return
+    }
+    this.errors[name] = ""
+  }
+
+  validateRol(name: string) {
+    const input = this.formData.get(name)
+    if (input?.value === "") {
+      this.errors[name] = "Debes seleccionar el rol"
       return
     }
     this.errors[name] = ""

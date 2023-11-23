@@ -43,6 +43,14 @@
         </select>
         <sub class="error-form" *ngIf="errors['user_status_id'] !== ''">{{errors['user_status_id']}}</sub>
       </div>
+      <div class="modal-input-block">
+        <label for="">Rol</label>
+        <select  name="rol_id" formControlName="rol_id" (change)="detectChange($event)">
+          <option value="">Escoja el rol</option>
+          <option *ngFor="let type of rol_types" value="{{type.id}}">{{type.name | titlecase}}</option>
+        </select>
+        <sub class="error-form" *ngIf="errors['rol_id'] !== ''">{{errors['rol_id']}}</sub>
+      </div>
       <div *ngIf="formTitle === formTitles.edit" class="modal-input-check-block">
         <label for="">Deseo actualizar mi contraseña</label>
         <input type="checkbox" (change)="showPasswordField($event)">
