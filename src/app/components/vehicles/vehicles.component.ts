@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ROUTES_API } from 'src/app/config/constants';
 import { Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
 
@@ -8,10 +9,10 @@ import { RestApiService } from 'src/app/services/rest-api.service';
   templateUrl: './vehicles.component.html',
   styleUrls: ['./vehicles.component.css']
 })
-export class VehiclesComponent implements OnInit {
+export class VehiclesComponent implements AfterViewInit {
   /** PROPIEDADES DE LA TABLA */
   sectionName:string = 'Vehículos'
-  path: string = 'http://localhost:4000/vehicle'
+  path: string = ROUTES_API.vehicle
   theads: string[] = ['N°', 'Placa', 'Acceso', 'Vehiculo', 'Estado', ' Opciones']
   fields: string[] = [
     'index',
@@ -82,10 +83,14 @@ export class VehiclesComponent implements OnInit {
     private restApi: RestApiService,
     private cdr: ChangeDetectorRef) {}
 
-  ngOnInit(): void {
-    this.loadVehicleTypes()
-    this.loadAccessTypes()
-    this.loadStatusTypes()
+  ngAfterViewInit(): void {
+    this.loadList()
+  }
+
+  loadList() {
+    if (this.vehicle_types.length === 0) {
+      this.loadVehicleTypes()
+    }
   }
 
   loadVehicleTypes() {
@@ -93,6 +98,7 @@ export class VehiclesComponent implements OnInit {
       try {
         if(data.result[0]) {
           this.vehicle_types = data.result[1]
+          this.loadAccessTypes()
         }
       } catch (error) {
         console.log(error);
@@ -105,6 +111,7 @@ export class VehiclesComponent implements OnInit {
       try {
         if(data.result[0]) {
           this.access_types = data.result[1]
+          this.loadStatusTypes()
         }
       } catch (error) {
         console.log(error);
@@ -140,6 +147,7 @@ export class VehiclesComponent implements OnInit {
     this.formTitle = 'Editar'
     this.isVisible = true
     this.selected = data
+    this.loadList()
     let clone = {
       id: data.id,
       plate_number: data.plate_number,
@@ -147,43 +155,43 @@ export class VehiclesComponent implements OnInit {
       vehicle_type_id: data.vehicle_type_id,
       status_type_id: data.status_type_id
     }
-
-     this.formData.setValue(clone)
+    this.formData.setValue(clone)
   }
 
-   /* Limpia el formulario para ingresar nuevos datos y lo muestra */
-   prepareFormToAdd() {
-     this.formTitle = 'Agregar'
-     this.isVisible = true
-     this.selected = this.initialData
-     this.formData.setValue(this.initialData)
-     this.newRegister = true
-   }
+  /* Limpia el formulario para ingresar nuevos datos y lo muestra */
+  prepareFormToAdd() {
+    this.formTitle = 'Agregar'
+    this.isVisible = true
+    this.selected = this.initialData
+    this.loadList()
+    this.formData.setValue(this.initialData)
+    this.newRegister = true
+  }
 
-   validatePlate(name: string) {
-     const input = this.formData.get(name)
-     // Si esta vacio
-     if (input?.value === "") {
-       this.errors[name] = `Debes ingresar una placa valida`
-       return
-     }
-     // Si la placa no es valida
-     if (input?.hasError('pattern')) {
-       this.errors[name] = `Número de placa invalido. Solo se aceptan 3 letras, un guion, de 3 a 4 números`
-       // Si aun teniendo el error intenta escribir más de 10 caracteres
-       if(input?.value.length > 10) {
-         input?.setValue(input?.value.slice(0,10));
-         this.errors[name] = 'Solo se permiten hasta 10 caracteres'
-         return
-       }
-       return
-     }
-     // Si intenta escribir más de 10 caracteres
-     if(input?.value.length === 10) {
-       input?.setValue(input?.value.slice(0,10));
-       this.errors[name] = 'Solo se permiten hasta 10 caracteres'
-       return
-     }
+  validatePlate(name: string) {
+    const input = this.formData.get(name)
+    // Si esta vacio
+    if (input?.value === "") {
+      this.errors[name] = `Debes ingresar una placa valida`
+      return
+    }
+    // Si la placa no es valida
+    if (input?.hasError('pattern')) {
+      this.errors[name] = `Número de placa invalido. Solo se aceptan 3 letras, un guion, de 3 a 4 números`
+      // Si aun teniendo el error intenta escribir más de 10 caracteres
+      if(input?.value.length > 10) {
+        input?.setValue(input?.value.slice(0,10));
+        this.errors[name] = 'Solo se permiten hasta 10 caracteres'
+        return
+      }
+      return
+    }
+    // Si intenta escribir más de 10 caracteres
+    if(input?.value.length === 10) {
+      input?.setValue(input?.value.slice(0,10));
+      this.errors[name] = 'Solo se permiten hasta 10 caracteres'
+      return
+    }
 
      // Si no hay error limpiamos el cuadro de error
      this.errors[name] = ""

@@ -21,8 +21,9 @@ import { UsersComponent } from './components/users/users.component';
 import { NewRegisterComponent } from './components/new-register/new-register.component';
 import { TableCommonComponent } from './components/table-common/table-common.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { SERVER_CAMERA_PATH } from './config/constants';
 
-const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
+const config: SocketIoConfig = { url: SERVER_CAMERA_PATH, options: {} };
 
 @NgModule({
   declarations: [

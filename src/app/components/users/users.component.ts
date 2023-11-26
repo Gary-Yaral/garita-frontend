@@ -1,5 +1,7 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { concat } from 'rxjs';
+import { ROUTES_API } from 'src/app/config/constants';
 import { FormTitle, RolType, StatusType, UserData, formTitle } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { FORM_TITLES } from 'src/app/utilities/constants';
@@ -11,10 +13,10 @@ import { nameRegex } from 'src/app/utilities/regExp';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent {
+export class UsersComponent implements AfterViewInit{
   /** PROPIEDADES DE LA TABLA */
   sectionName:string = 'Usuarios'
-  path: string = 'http://localhost:4000/user'
+  path: string = ROUTES_API.user
   theads: string[] = ['N°', 'Cédula', 'Nombre', 'Apellidos', 'Usuario', 'Rol', 'Estado', ' Opciones']
   fields: string[] = [
     'index',
@@ -103,35 +105,21 @@ export class UsersComponent {
     private restApi: RestApiService,
     private cdr: ChangeDetectorRef) {}
 
-  ngOnInit(): void {
-    this.loadStatusTypes()
-    this.loadRoles()
-  }
-
-  loadStatusTypes() {
-    this.restApi.doGet(`${this.path}/types`).subscribe((data:any) => {
-      try {
-        if(data.result[0]) {
-          this.status_types = data.result[1]
-        }
-      } catch (error) {
-        console.log(error);
+  ngAfterViewInit(): void {
+    let counter = 0
+    const result = concat(this.restApi.doGet(`${this.path}/types`), this.restApi.doGet(`${this.path}/roles`))
+    result.subscribe((data:any) => {
+      counter++
+      // Si se ejecuta la primera peticion
+      if(counter === 1) {
+        this.status_types = data.result[1]
       }
-    })
-  }
-
-  loadRoles() {
-    this.restApi.doGet(`${this.path}/roles`).subscribe((data:any) => {
-      try {
-        if(data.result[0]) {
-          this.rol_types = data.result[1]
-        }
-      } catch (error) {
-        console.log(error);
+      if(counter === 2) {
+        // Si se ejecuta la primera peticion
+        this.rol_types = data.result[1]
       }
-    })
+    });
   }
-
 
   /* Funcion para preparar las ventanas modal */
   enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
@@ -376,14 +364,8 @@ export class UsersComponent {
   /* Actualiza los datos de un registro de las base de datos*/
   updateData() {
     this.modalAlert.isVisible = false
-    // Validamos que no este seleccionado actualizar contraseña
-    const errorsList: string[] = this.getFormGroupErrors(this.formData)
-    const notPassword = errorsList.includes('password: required')
-    const isInvalidPass = errorsList.includes('password: invalidPassword')
-    // Si no ha seleccionado cambiar contraseña podrá actualizar sin problema
-    const canSend = notPassword && isInvalidPass && !this.passWillBeUpdated
 
-    if(this.formData.valid || canSend ) {
+    if(this.formData.valid || this.isValidNotPassword() ) {
       this.restApi.doPost(`${this.path}/update`, this.formData.value).subscribe((data:any) => {
         if(data.result[0]) {
           this.enableAlertModal(
@@ -442,7 +424,6 @@ export class UsersComponent {
   /* Elimina registro en la base de datos */
   deleteData(id:string | number) {
     this.modalAlert.isVisible = false
-    this.areErrors = true
     this.restApi.doPost(`${this.path}/delete`, {id}).subscribe((data:any) => {
       if(data.result[0]) {
         this.enableAlertModal(
@@ -481,16 +462,52 @@ export class UsersComponent {
     return errors;
   }
 
+  // Verificar si solo es error por no enviar contraseña
+  isValidNotPassword() {
+    const errorsList: string[] = this.getFormGroupErrors(this.formData)
+    if(errorsList.length === 2) {
+      const notPassword = errorsList.includes('password: required')
+      const isInvalidPass = errorsList.includes('password: invalidPassword')
+      if(notPassword && isInvalidPass && !this.passWillBeUpdated) {
+        return true
+      }
+    }
+    return false
+  }
+
+  checkboxReset() {
+    // Accedemos a los elemento checkbox por su ID
+    const passCheck = document.getElementById('password-check') as HTMLInputElement;
+    const willBeShowPass = document.getElementById('show-pass') as HTMLInputElement;
+    // Restableciendo el estado de los checkbox
+    if(passCheck && willBeShowPass) {
+      passCheck.checked = false; // Lo queremos desactivado al resetear
+      willBeShowPass.checked = false; // Lo queremos desactivado al resetear
+    }
+  }
+
   /* Limpiar el formulario luego de realizar acción */
   resetFormAndClose() {
+    // Reseteamos el FormGroup
     this.formData.reset()
     this.formData.get('type_id')?.setValue('')
+    // Ocultamos el formulario
     this.isVisible = false
+    // Ocultamos la ventana modal
     this.modalAlert.isVisible = false
+    // Indicamos que no ha habido cambios para la tabla
     this.hasChanged = false
+    // Resetamos el tipo de formulario que se mostrará
     this.newRegister = false
+    // Reseteamos los datos del formulario
     this.selected = this.initialData
+    // Reseteamos el mensaje de errores generales
     this.areErrors = false
+    // Reseteamos el input de la contraseña
+    this.passWillBeUpdated = false
+    this.passWillBeShowed = false
+    this.checkboxReset()
+    // Limpiamos todos los campos de errores
     Object.keys(this.errors).forEach((key:string) => {
       this.errors[key] = ''
     })

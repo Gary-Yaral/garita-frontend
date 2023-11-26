@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit{
     if(this.login.valid) {
       this.restApi.doPost(ROUTES_API.login, this.login.value).subscribe((data:any) => {
         if(data.access) {
+
           this.storageService.setStorage(data.info)
           this.router.navigate(['dashboard/home'])
         } else {

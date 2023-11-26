@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ROUTES_API } from 'src/app/config/constants';
 import { Driver, DriverType } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { cedulaEcuatorianaValidator } from 'src/app/utilities/functions';
@@ -10,10 +11,10 @@ import { nameRegex } from 'src/app/utilities/regExp';
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.css']
 })
-export class DriversComponent implements OnInit {
+export class DriversComponent implements AfterViewInit{
   /** PROPIEDADES DE LA TABLA */
   sectionName:string = 'Choferes'
-  path: string = 'http://localhost:4000/driver'
+  path: string = ROUTES_API.driver
   theads: string[] = ['N°', 'Cédula', 'Nombres', 'Apellidos', 'Tipo', ' Opciones']
   fields: string[] = ['index','dni','name', 'surname', 'type']
 
@@ -76,14 +77,14 @@ export class DriversComponent implements OnInit {
     private restApi: RestApiService,
     private cdr: ChangeDetectorRef) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {}
+
+  loadTypes() {
     this.restApi.doGet(`${this.path}/types`).subscribe((data:any) => {
-      try {
-        if(data.result[0]) {
-          this.types = data.result[1]
-        }
-      } catch (error) {
-        console.log(error);
+      if(data.result[0]) {
+        this.types = data.result[1]
+      } else {
+        console.log(data.result[0].error);
       }
     })
   }
@@ -102,6 +103,7 @@ export class DriversComponent implements OnInit {
   /* Prepara los datos que serán actualizados y muestra el formulario editar */
   prepareFormToUpdate(data: any) {
     this.formTitle = 'Editar'
+    if(this.types.length === 0) this.loadTypes()
     this.isVisible = true
     this.selected = data
     this.formData.setValue(data)
@@ -112,6 +114,7 @@ export class DriversComponent implements OnInit {
     this.formTitle = 'Agregar'
     this.isVisible = true
     this.selected = this.initialData
+    this.loadTypes()
     this.formData.setValue(this.initialData)
     this.newRegister = true
   }

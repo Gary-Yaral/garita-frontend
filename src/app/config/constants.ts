@@ -1,4 +1,5 @@
-const CAMERA_PATH: string = "http://localhost:4000/video_feed"
+const SERVER_CAMERA_PATH: string = "http://localhost:4500"
+const CAMERA_PATH = `${SERVER_CAMERA_PATH}/video_feed`
 const SYSTEM_NAME = "Garita"
 const VIEWS = [
   {pathName:"Inicio", path:"/dashboard/home", icon: "fa-solid fa-house"},
@@ -15,15 +16,22 @@ const ROLES = {
   USER: 'usuario',
 }
 
+const API_PATH = "http://localhost:5800"
+
 const ROUTES_API = {
-  login: "http://localhost:4000/user/get-access"
+  login: `${API_PATH}/user/get-access`,
+  user: `${API_PATH}/user`,
+  vehicle: `${API_PATH}/vehicle`,
+  driver: `${API_PATH}/driver`,
 }
 
 export {
   CAMERA_PATH,
   SYSTEM_NAME,
   VIEWS,
+  API_PATH,
   ROUTES_API,
+  SERVER_CAMERA_PATH,
   ROLES
 
 }
