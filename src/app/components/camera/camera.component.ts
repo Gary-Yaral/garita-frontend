@@ -18,9 +18,7 @@ export class CameraComponent {
   ) {}
 
   ngOnInit(): void {
-    this.socket.getMessage().subscribe((data: any) => {
-      console.log(data)
-    })
+    this.socket.getMessage().subscribe((data: any) => {})
   }
   showVideo() {
     this.lifeUrl = CAMERA_PATH

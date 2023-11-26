@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormDataStorage, UserData, Vehicle } from '../interfaces/allTypes';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,13 @@ import { FormDataStorage, UserData, Vehicle } from '../interfaces/allTypes';
 export class StorageService {
   storageKey: string = "secure_controls"
   storageFormKey: string = "secure_controls_form"
+  private formDataVehicleSubject = new Subject<any>();
+  formDataVehicle$: Observable<any> = this.formDataVehicleSubject.asObservable();
   constructor() { }
+
+  setFormDataVehicle(data: any) {
+    this.formDataVehicleSubject.next(data);
+  }
 
   storageExists() {
     const storage = localStorage.getItem(this.storageKey)

@@ -1,5 +1,5 @@
 <div class="container-register">
-  <form class="form-register">
+  <form class="form-register" [formGroup]="formData">
     <div class="form-header">
       <div class="close" (click)="hideForm()">
         <i class="fa-solid fa-arrow-left"></i>
@@ -14,53 +14,56 @@
     </div>
     <div class="input-block">
       <label for="">Numero de Placa</label>
-      <input type="text" name="number_plate" id="number_plate">
-      <sub class="error">Ingresa una placa valida</sub>
+      <input type="text" name="plate_number" id="plate_number" formControlName="plate_number">
+      <sub class="error-form" *ngIf="errors['plate_number'] !== ''">{{errors['plate_mumber']}}</sub>
     </div>
     <div class="input-block">
       <label for="">Tipo de Vehiculo</label>
-      <select name="" id="">
+      <select name="vehicle_type_id" id="vehicle_type_id" formControlName="vehicle_type_id">
         <option value="">Selecciona un tipo de vehículo</option>
+        <option *ngFor="let type of vehicle_types" value="{{type.id}}">{{type.name | titlecase}}</option>
       </select>
-      <sub class="error">Debes seleccionar el tipo de vehículo</sub>
+      <sub class="error-form" *ngIf="errors['vehicle_type_id'] !== ''">{{errors['vehicle_type_id']}}</sub>
     </div>
     <div class="input-block">
       <label for="">Tipo de Acceso</label>
-      <select name="" id="">
+      <select name="access_type_id" id="access_type_id" formControlName="access_type_id">
         <option value="">Selecciona el tipo de acceso</option>
+        <option *ngFor="let type of access_types" value="{{type.id}}">{{type.name | titlecase}}</option>
       </select>
-      <sub class="error">Debes seleccionar el tipo de acceso</sub>
+      <sub class="error-form" *ngIf="errors['access_type_id'] !== ''">{{errors['access_type_id']}}</sub>
     </div>
     <div class="input-block">
       <label for="">Estado (Ingreso / Salida)</label>
-      <select name="" id="">
+      <select name="status_type_id" id="status_type_id" formControlName="status_type_id">
         <option value="">Selecciona el estado</option>
+        <option *ngFor="let type of status_types" value="{{type.id}}">{{type.name | titlecase}}</option>
       </select>
-      <sub class="error">Debes seleccionar el estado del vehículo</sub>
+      <sub class="error-form" *ngIf="errors['status_type_id'] !== ''">{{errors['status_type_id']}}</sub>
     </div>
     <hr>
     <h3>Chofér</h3>
     <div class="input-block">
       <label for="">Cédula</label>
-      <input type="text" name="number_plate" id="number_plate">
-      <sub class="error">Ingresa una cédula valida</sub>
+      <input type="text" name="dni" id="dni">
+      <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
     </div>
     <div class="input-block">
       <label for="">Nombres</label>
-      <input type="text" name="number_plate" id="number_plate">
-      <sub class="error">Ingresa nombres válidos</sub>
+      <input type="text" name="name" id="name">
+      <sub class="error-form" *ngIf="errors['name'] !== ''">{{errors['name']}}</sub>
     </div>
     <div class="input-block">
       <label for="">Apellidos</label>
-      <input type="text" name="number_plate" id="number_plate">
-      <sub class="error">Ingresa apellidos válidos</sub>
+      <input type="text" name="surname" id="surname">
+      <sub class="error-form" *ngIf="errors['surname'] !== ''">{{errors['surname']}}</sub>
     </div>
     <div class="input-block">
       <label for="">Tipo de Chofér</label>
-      <select name="" id="">
+      <select name="driver_type_id" id="driver_type_id">
         <option value="">Selecciona el tipo de chofér</option>
       </select>
-      <sub class="error">Debes seleccionar el tipo de chofér</sub>
+      <sub class="error-form" *ngIf="errors['driver_type_id'] !== ''">{{errors['driver_type_id']}}</sub>
     </div>
     <div class="btns-block">
       <button>Guardar</button>

@@ -12,11 +12,8 @@ export class CameraService {
     id: 0,
     plate_number: '',
     access_type_id: 0,
-    access_type_name: '',
     status_type_id: 0,
-    status_type_name: '',
-    vehicle_type_id: 0,
-    vehicle_type_name: '',
+    vehicle_type_id: 0
   }
 
   wasFound: boolean = false;

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ROUTES_API } from 'src/app/config/constants';
 import { Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
 import { RestApiService } from 'src/app/services/rest-api.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-vehicles',
@@ -81,53 +82,17 @@ export class VehiclesComponent implements AfterViewInit {
 
   constructor(
     private restApi: RestApiService,
+    private storageService: StorageService,
     private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
-    this.loadList()
-  }
-
-  loadList() {
-    if (this.vehicle_types.length === 0) {
-      this.loadVehicleTypes()
-    }
-  }
-
-  loadVehicleTypes() {
-    this.restApi.doGet(`${this.path}/types`).subscribe((data:any) => {
-      try {
-        if(data.result[0]) {
-          this.vehicle_types = data.result[1]
-          this.loadAccessTypes()
-        }
-      } catch (error) {
-        console.log(error);
+    this.storageService.formDataVehicle$.subscribe((data: any) => {
+      if(data) {
+        this.vehicle_types = data.vehicles_types
+        this.access_types = data.access_types
+        this.status_types = data.status_types
       }
-    })
-  }
 
-  loadAccessTypes() {
-    this.restApi.doGet(`${this.path}/access-types`).subscribe((data:any) => {
-      try {
-        if(data.result[0]) {
-          this.access_types = data.result[1]
-          this.loadStatusTypes()
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    })
-  }
-
-  loadStatusTypes() {
-    this.restApi.doGet(`${this.path}/status-types`).subscribe((data:any) => {
-      try {
-        if(data.result[0]) {
-          this.status_types = data.result[1]
-        }
-      } catch (error) {
-        console.log(error);
-      }
     })
   }
 
@@ -147,7 +112,6 @@ export class VehiclesComponent implements AfterViewInit {
     this.formTitle = 'Editar'
     this.isVisible = true
     this.selected = data
-    this.loadList()
     let clone = {
       id: data.id,
       plate_number: data.plate_number,
@@ -163,7 +127,6 @@ export class VehiclesComponent implements AfterViewInit {
     this.formTitle = 'Agregar'
     this.isVisible = true
     this.selected = this.initialData
-    this.loadList()
     this.formData.setValue(this.initialData)
     this.newRegister = true
   }
@@ -267,8 +230,6 @@ export class VehiclesComponent implements AfterViewInit {
    /* Actualiza los datos de un registro de las base de datos*/
    updateData() {
      this.modalAlert.isVisible = false
-     console.log(this.formData.value);
-
      if(this.formData.valid) {
        this.restApi.doPost(`${this.path}/update`, this.formData.value).subscribe((data:any) => {
          if(data.result[0]) {
