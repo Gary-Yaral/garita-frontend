@@ -1,6 +1,6 @@
 <nav>
-  <h1>{{sysName}}</h1>
   <i class="fa-solid fa-bars color-bars" id="bars" (click)="openClose()"></i>
+  <h1>{{sysName}}</h1>
   <ul class="nav">
     <li class="float_link" *ngFor="let view of views">
       <a href="{{view.path}}" [attr.target]="view.blank ? '_blank' : null">{{view.pathName}}</a>

@@ -24,6 +24,7 @@ const ROUTES_API = {
   user: `${API_PATH}/user`,
   vehicle: `${API_PATH}/vehicle`,
   driver: `${API_PATH}/driver`,
+  register: `${API_PATH}/register`,
 }
 
 export {

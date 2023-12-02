@@ -6,7 +6,7 @@
   --margin-top: 4rem;
   --height: 100vh
   --width-nav: 14rem;
-  --green-btn: rgb(48, 183, 48);
+  --green-btn: rgb(0, 234, 113);
 }
 * {
   padding: 0;
@@ -39,7 +39,7 @@ body {
   height: fit-content;
   align-items: center;
   flex-direction: column;
-  background: black;
+  background: rgba(50, 50, 76, 0);
   padding: 1rem;
   box-sizing: border-box;
   gap: 1rem;
@@ -50,6 +50,8 @@ body {
   flex-grow: 1;
   width: 100%;
   max-width: 600px;
+  border-radius: 10px;
+  border: 5px solid rgba(60, 83, 117, 0.324);
 }
 
 .camera_btns {

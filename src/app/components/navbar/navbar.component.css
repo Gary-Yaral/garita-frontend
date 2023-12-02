@@ -6,7 +6,7 @@ nav {
   height: 4rem;
   box-sizing: border-box;
   align-items: center;
-  box-shadow: 0px 0px 4px 1px rgb(223, 223, 223);
+  box-shadow: 0px 0px 4px 1px rgba(3, 3, 3, 0.42);
 }
 
 nav h1,
@@ -59,6 +59,12 @@ nav ul li a{
 @media screen and (max-width: 900px) {
   nav ul {
     display: none;
+  }
+
+  nav {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
   }
 
   .color-bars {

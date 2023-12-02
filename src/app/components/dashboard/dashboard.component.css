@@ -1,7 +1,10 @@
 main {
   width: 100%;
   min-height: 100vh;
-  background: rgb(240, 235, 245);
+  background-image: linear-gradient(to right bottom, rgb(50, 50, 76) 33.3%,
+  lime 33.3%, rgb(74, 126, 204) 33.3%);
+ /*  background: repeating-linear-gradient(45deg to 90deg , blue, lime, yellow); */
+  /* background: rgb(240, 235, 245); */
   display: flex;
   flex-direction: column;
 }
@@ -18,7 +21,7 @@ main {
 }
 
 .border-green {
-  border: 1px solid green;
+  border: 1px solid rgb(0, 174, 84);
 }
 
 .border-red {
@@ -26,7 +29,7 @@ main {
 }
 
 .border-left-green {
-  border-left: 1px solid green;
+  border-left: 1px solid rgb(0, 174, 84);
 }
 
 .border-left-red {
@@ -45,22 +48,22 @@ main {
   font-size: 1.5rem;
 }
 .close-green{
-  color:green;
+  color:rgb(0, 174, 84);
 }
 
 .close-red {
   color: rgb(198, 64, 2);
 }
 .green-card {
-  color: green;
-  background: rgb(193, 255, 193);
+  color: rgb(0, 174, 84);
+  background: rgb(187, 255, 220);
   display: flex;
   gap: 10px;
 }
 
 .red-card {
   color: rgb(198, 64, 2);
-  background: rgb(255, 212, 133);
+  background: rgb(255, 241, 218);
   display: flex;
   gap: 10px;
 }

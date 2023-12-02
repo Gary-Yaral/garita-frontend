@@ -7,7 +7,7 @@
   margin-top: -1rem;
   overflow-y: auto;
   position: fixed;
-  background: rgb(0, 0, 0);
+  background: rgba(50, 50, 76, 0.882);
   z-index: 1;
   left: 0;
   transition: all 0.1s ease;
