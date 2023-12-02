@@ -18,6 +18,7 @@ const ROLES = {
 
 const API_PATH = "http://localhost:5800"
 
+const EXCEL_PATH = `${API_PATH}/excel/create`
 const ROUTES_API = {
   login: `${API_PATH}/user/get-access`,
   user: `${API_PATH}/user`,
@@ -30,6 +31,7 @@ export {
   SYSTEM_NAME,
   VIEWS,
   API_PATH,
+  EXCEL_PATH,
   ROUTES_API,
   SERVER_CAMERA_PATH,
   ROLES

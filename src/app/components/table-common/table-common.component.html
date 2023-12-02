@@ -1,6 +1,11 @@
 <section class="section-container">
   <h1 class="section-title">{{sectionName}}</h1>
- <button class="btn_add" (click)="openFormToAdd()">Agregar</button>
+  <div class="options-block">
+    <button class="btn_add" (click)="openFormToAdd()">Agregar</button>
+    <button class="btn_excel" (click)="createExcel()">
+      <i class="fa-regular fa-file-excel"></i><span>Excel</span>
+    </button>
+  </div>
  <main class="main-paginator">
    <div class="table-filters">
      <form class="per-page-container" [formGroup]="perPage">

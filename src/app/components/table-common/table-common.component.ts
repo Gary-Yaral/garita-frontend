@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { CAMERA_PATH } from 'src/app/config/constants';
+import { CAMERA_PATH, EXCEL_PATH } from 'src/app/config/constants';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { Paginator } from 'src/app/utilities/paginator';
 
@@ -178,6 +178,54 @@ export class TableCommonComponent implements OnChanges, AfterViewInit {
 
   askToDelete(item: any) {
     this.prepareToDelete.emit(item.id)
+  }
+
+  createExcel() {
+    this.restApi.getExcel(EXCEL_PATH, {
+      data: [...this.getExcelData()],
+      file_name: this.sectionName,
+      is_filtered: this.search.get('filter')?.value !== ''
+    }).subscribe((response: any) => {
+        let blob: Blob = response.body
+        this.restApi.dowloadFile(blob, this.getFileName(response))
+      },
+    );
+  }
+
+  getExcelData() {
+    let clone = [...this.items]
+    let data =  clone.map((item) => {
+      let obj: any = {}
+      // Extraemos los datos que queremos en nuestro excel
+      Object.keys(item).forEach(key => {
+        if(key === 'index') {
+          obj[key] = item[key]
+        }
+        if(typeof item[key] === 'string') {
+          obj[key] = item[key]
+        }
+      })
+      //Creamos un arreglo con los datos de la fila ordenada
+      let arr: (string | number)[] = []
+      this.fields.forEach(key => {
+        arr.push(obj[key])
+      })
+      return arr
+    })
+    let titles = [...this.theads]
+    titles.pop()
+    data.unshift(titles)
+
+    return data
+  }
+
+  getFileName(response: any) {
+    const contentDisposition = response.headers.get('content-disposition');
+    if(contentDisposition) {
+      let filename = contentDisposition.split('=')[1];
+      return filename + ".xlsx"
+    }
+    return 'report.xlsx';
   }
 }
 

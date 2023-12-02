@@ -178,7 +178,14 @@
   flex-grow: 1;
 }
 
-
+.options-block {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  height: fit-content;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
 
  @media screen and (max-width: 550px) {
   .table-filters {

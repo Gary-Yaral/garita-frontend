@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { StorageService } from './storage.service';
 
@@ -67,5 +67,26 @@ export class RestApiService {
       'Authorization': 'Bearer ' + this.currentUser.token
     });
     return this.http.delete(url, {headers});
+  }
+
+  getExcel(url: string, data: any) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(url, data, {
+      headers: headers,
+      responseType: 'blob',
+      observe: 'response'
+    });
+  }
+
+  dowloadFile(blobData: Blob, filename: string): void {
+    const blob = new Blob([blobData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   }
 }

@@ -71,18 +71,27 @@ body {
   color: white
 }
 
-.btn_add {
+.btn_add, .btn_excel {
   padding: .6rem;
   cursor: pointer;
   border: none;
   border-radius: 5px;
   min-width: 8rem;
+  font-size: 1rem;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.btn_add {
   background: rgb(0, 119, 255);
   color: white;
-  font-size: 1rem;
-  margin-bottom: 2rem;
 }
 
+.btn_excel {
+  background: rgb(0, 234, 113);
+  color: white;
+}
 
 /* CSS de ventana de edicion */
 .modal-form {
@@ -190,7 +199,15 @@ body {
   }
 
   .btn_add {
-    width: 100%;
+    flex-grow: 1;
+  }
+
+  .btn_excel {
+    flex-grow: 1;
+  }
+
+  .btn_add, .btn_excel {
+    min-width: 180px;
   }
 }
 
