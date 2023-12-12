@@ -9,61 +9,80 @@
     <hr>
     <h3>Vehículo</h3>
     <div class="checkbox">
-      <input type="checkbox" name="write_enable" id="write_enable">
+      <input type="checkbox" name="write_enable" id="write_enable" (change)="enableInputPlate($event)">
       <label for="write_enable">¿Placa no fue leída correctamente?</label>
     </div>
     <div class="input-block">
       <label for="">Numero de Placa</label>
-      <input type="text" name="plate_number" id="plate_number" formControlName="plate_number">
+      <input type="text" name="plate_number" id="plate_number" formControlName="plate_number" [readonly]="plateNumberLocked" (input)="readPlate($event)">
       <sub class="error-form" *ngIf="errors['plate_number'] !== ''">{{errors['plate_mumber']}}</sub>
     </div>
+    <div *ngIf="vehicle.length > 0">
+      <div *ngFor="let vehicleLoad of vehicle" class="form-data-block">
+        <div class="block-info">
+          <span>Tipo Vehículo:</span>
+          <span>{{vehicleLoad.vehicle_type_name}}</span>
+        </div>
+        <div class="block-info">
+          <span>Tipo de acceso:</span>
+          <span>{{vehicleLoad.access_type_name}}</span>
+        </div>
+        <div class="block-info">
+          <span>Estado actual:</span>
+          <span>{{vehicleLoad.status_type_name}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="error-form" *ngIf="errors.plate_number !== ''">{{errors.plate_number}}</div>
+    <hr>
+    <h3>Adicionales</h3>
     <div class="input-block">
-      <label for="">Tipo de Vehiculo</label>
-      <select name="vehicle_type_id" id="vehicle_type_id" formControlName="vehicle_type_id">
-        <option value="">Selecciona un tipo de vehículo</option>
-        <option *ngFor="let type of vehicle_types" value="{{type.id}}">{{type.name | titlecase}}</option>
-      </select>
-      <sub class="error-form" *ngIf="errors['vehicle_type_id'] !== ''">{{errors['vehicle_type_id']}}</sub>
+      <label for="">Km de llegada</label>
+      <input type="text" name="dni" id="dni">
+      <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
     </div>
     <div class="input-block">
-      <label for="">Tipo de Acceso</label>
-      <select name="access_type_id" id="access_type_id" formControlName="access_type_id">
-        <option value="">Selecciona el tipo de acceso</option>
-        <option *ngFor="let type of access_types" value="{{type.id}}">{{type.name | titlecase}}</option>
-      </select>
-      <sub class="error-form" *ngIf="errors['access_type_id'] !== ''">{{errors['access_type_id']}}</sub>
+      <label for="">Km de salida</label>
+      <input type="text" name="dni" id="dni">
+      <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
     </div>
     <div class="input-block">
-      <label for="">Estado (Ingreso / Salida)</label>
-      <select name="status_type_id" id="status_type_id" formControlName="status_type_id">
-        <option value="">Selecciona el estado</option>
-        <option *ngFor="let type of status_types" value="{{type.id}}">{{type.name | titlecase}}</option>
-      </select>
-      <sub class="error-form" *ngIf="errors['status_type_id'] !== ''">{{errors['status_type_id']}}</sub>
+      <label for="">Destino</label>
+      <input type="text" name="dni" id="dni">
+      <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
+    </div>
+    <div class="input-block">
+      <label for="">Destino</label>
+      <textarea name="" id="" cols="30" rows="10"></textarea>
+      <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
     </div>
     <hr>
     <h3>Chofér</h3>
     <div class="input-block">
       <label for="">Cédula</label>
       <input type="text" name="dni" id="dni">
-      <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
-    </div>
-    <div class="input-block">
-      <label for="">Nombres</label>
-      <input type="text" name="name" id="name">
-      <sub class="error-form" *ngIf="errors['name'] !== ''">{{errors['name']}}</sub>
-    </div>
-    <div class="input-block">
-      <label for="">Apellidos</label>
-      <input type="text" name="surname" id="surname">
-      <sub class="error-form" *ngIf="errors['surname'] !== ''">{{errors['surname']}}</sub>
-    </div>
-    <div class="input-block">
-      <label for="">Tipo de Chofér</label>
-      <select name="driver_type_id" id="driver_type_id">
-        <option value="">Selecciona el tipo de chofér</option>
-      </select>
-      <sub class="error-form" *ngIf="errors['driver_type_id'] !== ''">{{errors['driver_type_id']}}</sub>
+      <sub class="error-form"></sub>
+      <div *ngIf="driver.length > 0">
+        <div *ngFor="let driverLoad of driver" class="form-data-block">
+          <div class="block-info">
+            <span>Cédula:</span>
+            <span>{{driverLoad.dni}}</span>
+          </div>
+          <div class="block-info">
+            <span>Nombres:</span>
+            <span>{{driverLoad.name}}</span>
+          </div>
+          <div class="block-info">
+            <span>Apellidos:</span>
+            <span>{{driverLoad.surname}}</span>
+          </div>
+          <div class="block-info">
+            <span>Tipo Chofer:</span>
+            <span>{{driverLoad.type}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="not-found" *ngIf="driverLoadError.error">{{driverLoadError.msg}}</div>
     </div>
     <div class="btns-block">
       <button>Guardar</button>

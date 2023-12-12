@@ -22,6 +22,7 @@ import { NewRegisterComponent } from './components/new-register/new-register.com
 import { TableCommonComponent } from './components/table-common/table-common.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { SERVER_CAMERA_PATH } from './config/constants';
+import { FooterComponent } from './components/footer/footer.component';
 
 const config: SocketIoConfig = { url: SERVER_CAMERA_PATH, options: {} };
 
@@ -42,7 +43,8 @@ const config: SocketIoConfig = { url: SERVER_CAMERA_PATH, options: {} };
     UsersComponent,
     NewRegisterComponent,
     TableCommonComponent,
-    AlertComponent
+    AlertComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

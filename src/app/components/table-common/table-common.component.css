@@ -7,8 +7,17 @@
 }
 
 .section-container{
+  display: flex;
   width: 100%;
   min-height: fit-content;
+  justify-content: center;
+}
+
+.container-datatable {
+  display: grid;
+  max-width: 1200px;
+  grid-template-columns: 1fr;
+  width: 100%;
 }
 
 .table-container {

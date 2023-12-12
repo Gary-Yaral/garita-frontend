@@ -1,49 +1,36 @@
 <section class="content">
   <app-float-navbar></app-float-navbar>
-  <div class="home">
-    <div class="info">
-      <img src="../../../assets/img/banner3.jpg" alt="banner">
-      <h1 class="info-title">Bienvenido al Sistema</h1>
-      <hr class="line">
-      <div class="card-title">Entradas - Vehiculos</div>
-      <div class="card">
-        <div class="card-info">
-          <span class="card-prop">Militares</span>
-          <span class="card-number">10</span>
+  <div class="container-global">
+    <div class="home">
+      <div class="info">
+       <!--  <img src="../../../assets/img/banner3.jpg" alt="banner"> -->
+        <h1 class="info-title">Bienvenido al Sistema</h1>
+        <hr class="line">
+        <div class="card-title">Entradas - Vehiculos</div>
+        <div class="card">
+          <div class="card-info" *ngFor="let data of arrivalData">
+            <span class="card-prop">{{data.name}}</span>
+            <span class="card-number">{{data.total}}</span>
+          </div>
         </div>
-        <div class="card-info">
-          <span class="card-prop">Administrativos</span>
-          <span class="card-number">15</span>
-        </div>
-        <div class="card-info">
-          <span class="card-prop">Particulares</span>
-          <span class="card-number">15</span>
+        <hr class="line">
+        <div class="card-title">Salidas - Vehículos</div>
+        <div class="card">
+          <div class="card-info" *ngFor="let data of exitData">
+            <span class="card-prop">{{data.name}}</span>
+            <span class="card-number">{{data.total}}</span>
+          </div>
         </div>
       </div>
-      <hr class="line">
-      <div class="card-title">Salidas - Vehículos</div>
-      <div class="card">
-        <div class="card-info">
-          <span class="card-prop">Militares</span>
-          <span class="card-number">10</span>
+      <div class="camera_home">
+        <!-- Botones para activar y desactivar la imagen -->
+        <div class="camera_btns">
+          <button class="btn_action" (click)="showVideo()">Activar Cámara</button>
+          <button class="btn_action" (click)="hideVideo()">Apagar Cámara</button>
         </div>
-        <div class="card-info">
-          <span class="card-prop">Administrativos</span>
-          <span class="card-number">15</span>
-        </div>
-        <div class="card-info">
-          <span class="card-prop">Particulares</span>
-          <span class="card-number">15</span>
-        </div>
+        <img src="{{lifeUrl}}" id="videoImage" alt="">
       </div>
     </div>
-    <div class="camera_home">
-      <!-- Botones para activar y desactivar la imagen -->
-      <div class="camera_btns">
-        <button class="btn_action" (click)="showVideo()">Activar Cámara</button>
-        <button class="btn_action" (click)="hideVideo()">Apagar Cámara</button>
-      </div>
-      <img src="{{lifeUrl}}" id="videoImage" alt="">
-    </div>
+    <app-footer></app-footer>
   </div>
 </section>

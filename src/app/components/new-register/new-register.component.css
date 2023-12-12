@@ -107,6 +107,16 @@ input[type="checkbox"] {
   color: white;
 }
 
+.form-data-block {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.block-info {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
 @media screen and (max-width: 600px) {
   .btns-block {
     display: flex;

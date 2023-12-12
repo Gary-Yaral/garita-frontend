@@ -31,6 +31,11 @@ export interface VehicleType {
   name: string
 }
 
+export interface FilterType {
+  id: string,
+  name: string
+}
+
 export interface Driver {
   id?: Number,
   dni: String,
@@ -55,9 +60,21 @@ export interface StatusType {
   name: string
 }
 
+export interface HomeData {
+  name: string,
+  total: number
+}
+
 export interface FormDataStorage {
   vehicle: Vehicle,
   exists: boolean
+}
+
+export interface DriverLoaded {
+  dni: string,
+  name: string,
+  surname: string,
+  type: string
 }
 
 export type formTitle = 'Agregar'| 'Editar' | ''
@@ -66,5 +83,7 @@ export interface FormTitle {
   edit: formTitle,
   none: formTitle
 }
+
+
 
 export type driverKey = keyof Driver;
