@@ -71,6 +71,7 @@ export interface FormDataStorage {
 }
 
 export interface DriverLoaded {
+  id: number | string
   dni: string,
   name: string,
   surname: string,

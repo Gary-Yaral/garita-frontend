@@ -75,7 +75,8 @@ input[type="checkbox"] {
 }
 
 .input-block input,
-.input-block select
+.input-block select,
+.input-block textarea
 {
   padding: .8rem;
   outline-color: rgb(89, 179, 206);

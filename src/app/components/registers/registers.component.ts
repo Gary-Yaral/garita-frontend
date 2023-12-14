@@ -15,8 +15,35 @@ export class RegistersComponent {
    /** PROPIEDADES DE LA TABLA */
    sectionName:string = 'Registros'
    path: string = ROUTES_API.register
-   theads: string[] = ['N°', 'Cédula', 'Nombres', 'Apellidos', 'Tipo', ' Opciones']
-   fields: string[] = ['index','dni','name', 'surname', 'type']
+   theads: string[] = [
+    'N°',
+    'Cédula',
+    'Usuario',
+    'Chofér',
+    'Apellidos',
+    'Placa',
+    'Tipo Acceso',
+    'Tipo Vehiculo',
+    'Kilometros',
+    'Observacion',
+    'Destino',
+    'Fecha',
+    'Opciones'
+  ]
+   fields: string[] = [
+    'index',
+    'dni',
+    'username',
+    'driver_name',
+    'plate_number',
+    'access_type',
+    'register_type',
+    'vehicle_type',
+    'kms',
+    'observation',
+    'destiny',
+    'registered_date'
+  ]
 
    /** PROPIEDADES DEL COMPONENTE */
    hasChanged = false // Propiedad para refresh tabla

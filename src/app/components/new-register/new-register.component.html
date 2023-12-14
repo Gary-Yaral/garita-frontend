@@ -38,38 +38,14 @@
           </div>
         </div>
       </div>
-      <div class="error-form" *ngIf="errors.plate_number !== ''">{{errors.plate_number}}</div>
-    </fieldset>
-    <hr>
-    <fieldset>
-      <legend>Adicionales</legend>
-      <div class="input-block">
-        <label for="">Km de llegada</label>
-        <input type="text" name="dni" id="dni">
-        <sub class="error-form" *ngIf="errors[''] !== ''">{{errors['']}}</sub>
-      </div>
-      <div class="input-block">
-        <label for="">Km de salida</label>
-        <input type="text" name="dni" id="dni">
-        <sub class="error-form" *ngIf="errors[''] !== ''">{{errors['']}}</sub>
-      </div>
-      <div class="input-block">
-        <label for="">Destino</label>
-        <input type="text" name="dni" id="dni">
-        <sub class="error-form" *ngIf="errors[''] !== ''">{{errors['']}}</sub>
-      </div>
-      <div class="input-block">
-        <label for="">Destino</label>
-        <textarea name="" id="" cols="30" rows="10" class="textarea-register"></textarea>
-        <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
-      </div>
+      <sub class="error-form" *ngIf="errors.plate_number !== ''">{{errors.plate_number}}</sub>
     </fieldset>
     <hr>
     <fieldset>
       <legend>Chofér</legend>
       <div class="input-block">
         <label for="">Cédula</label>
-        <input type="text" name="dni" id="dni" (input)="readDriver($event)">
+        <input type="text" name="dni" id="dni" (input)="readDriver($event)" formControlName="dni">
         <sub class="error-form"></sub>
       </div>
       <div *ngIf="driver.length > 0">
@@ -94,9 +70,29 @@
       </div>
       <sub class="error-form" *ngIf="errors.dni !== ''">{{errors.dni}}</sub>
     </fieldset>
+    <hr *ngIf="isMandatory">
+    <fieldset *ngIf="isMandatory">
+      <legend>Adicionales</legend>
+      <div class="input-block">
+        <label for="">Km recorridos</label>
+        <input type="text" name="dni" id="dni" (input)="validateKm($event)" formControlName="kms">
+        <sub class="error-form" *ngIf="errors.kms !== ''">{{errors.kms}}</sub>
+      </div>
+      <div class="input-block">
+        <label for="">Destino</label>
+        <input type="text" name="dni" id="dni" (input)="validateDestiny($event)" formControlName="destiny">
+        <sub class="error-form" *ngIf="errors.destiny !== ''">{{errors.destiny}}</sub>
+      </div>
+      <div class="input-block">
+        <label for="">Observaciones</label>
+        <textarea name="" id="" cols="30" rows="10" class="textarea-register" (input)="validateObservation($event)" formControlName="observation"></textarea>
+        <sub class="error-form" *ngIf="errors.observation !== ''">{{errors.observation}}</sub>
+      </div>
+    </fieldset>
     <div class="btns-block">
-      <button>Guardar</button>
+      <button (click)="sendData()">Guardar</button>
       <button>Cancelar</button>
     </div>
+    <sub class="error-form" *ngIf="errors.general !== ''">{{errors.general}}</sub>
   </form>
 </div>

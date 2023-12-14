@@ -14,9 +14,9 @@
 }
 
 .container-datatable {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   max-width: 1200px;
-  grid-template-columns: 1fr;
   width: 100%;
 }
 
@@ -76,6 +76,7 @@
 .table-registers td {
   padding: .8rem;
   text-align: center;
+  min-width: 10rem;
 }
 
 .table-registers tbody tr:nth-child(odd) {

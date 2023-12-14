@@ -20,3 +20,5 @@ export const INITIAL_DRIVER_DATA = {
   status_type_id: '',
   vehicle_type_id: ''
 }
+
+export const MANDATORY_IF_HAVE_IDS = [1]
