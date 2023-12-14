@@ -21,4 +21,10 @@ export const INITIAL_DRIVER_DATA = {
   vehicle_type_id: ''
 }
 
+export const CHANGES_TYPE = {
+  ADD: 1,
+  UPDATE: 2,
+  DELETE: 3
+}
+
 export const MANDATORY_IF_HAVE_IDS = [1]

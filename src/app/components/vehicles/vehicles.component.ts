@@ -2,8 +2,10 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/co
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ROUTES_API } from 'src/app/config/constants';
 import { Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
+import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { CHANGES_TYPE } from 'src/app/utilities/constants';
 
 @Component({
   selector: 'app-vehicles',
@@ -24,7 +26,6 @@ export class VehiclesComponent implements AfterViewInit {
   ]
 
   /** PROPIEDADES DEL COMPONENTE */
-  hasChanged = false // Propiedad para refresh tabla
   isVisible:boolean = false // Propiedad para ocultar o mostrar formulario
   vehicle_types: VehicleType[] = [] // Lista de typos de choferes
   access_types: VehicleType[] = [] // Lista de typos de choferes
@@ -83,7 +84,8 @@ export class VehiclesComponent implements AfterViewInit {
   constructor(
     private restApi: RestApiService,
     private storageService: StorageService,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private reload: ReloadService) {}
 
   ngAfterViewInit(): void {
     this.storageService.formDataVehicle$.subscribe((data: any) => {
@@ -240,7 +242,7 @@ export class VehiclesComponent implements AfterViewInit {
              () => this.resetFormAndClose(),
              () => this.resetFormAndClose()
            )
-           this.hasChanged = true
+           this.reload.addChanges({changes: true, type: CHANGES_TYPE.UPDATE})
          } else {
            this.enableAlertModal(
              "Error",
@@ -269,7 +271,7 @@ export class VehiclesComponent implements AfterViewInit {
              () => this.resetFormAndClose(),
              () => this.resetFormAndClose()
            )
-           this.hasChanged = true
+           this.reload.addChanges({changes: true, type: CHANGES_TYPE.ADD})
            this.areErrors = false
          } else{
            this.enableAlertModal(
@@ -299,7 +301,7 @@ export class VehiclesComponent implements AfterViewInit {
            () => this.resetFormAndClose(),
            () => this.resetFormAndClose()
          )
-         this.hasChanged = true
+         this.reload.addChanges({changes: true, type: CHANGES_TYPE.DELETE})
          this.areErrors = false
        }
      })
@@ -311,7 +313,6 @@ export class VehiclesComponent implements AfterViewInit {
      this.formData.get('type_id')?.setValue('')
      this.isVisible = false
      this.modalAlert.isVisible = false
-     this.hasChanged = false
      this.newRegister = false
      this.selected = this.initialData
      this.areErrors = false

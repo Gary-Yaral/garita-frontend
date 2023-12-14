@@ -90,9 +90,16 @@
       </div>
     </fieldset>
     <div class="btns-block">
-      <button (click)="sendData()">Guardar</button>
+      <button (click)="prepareToAdd()">Guardar</button>
       <button>Cancelar</button>
     </div>
     <sub class="error-form" *ngIf="errors.general !== ''">{{errors.general}}</sub>
   </form>
+  <app-alert
+    [title]="modalAlert.title"
+    *ngIf="modalAlert.isVisible"
+    [message]="modalAlert.message"
+    [icon]="modalAlert.icon"
+    (agree)="modalAlert.actions.accept()"
+    (cancel)="modalAlert.actions.cancel()"></app-alert>
 </div>

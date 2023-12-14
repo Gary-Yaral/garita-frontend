@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ROUTES_API } from 'src/app/config/constants';
-import { DriverLoaded, FilterType, Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
+import { DriverLoaded, Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
 import { CameraService } from 'src/app/services/camera.service';
+import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { INITIAL_VEHICLE_DATA, MANDATORY_IF_HAVE_IDS } from 'src/app/utilities/constants';
+import { CHANGES_TYPE, INITIAL_VEHICLE_DATA, MANDATORY_IF_HAVE_IDS } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaFn } from 'src/app/utilities/functions';
 import { textarea } from 'src/app/utilities/regExp';
 
@@ -18,6 +19,17 @@ export class NewRegisterComponent implements OnInit{
   @Input() vehicle_types: VehicleType[] = [] // Lista de typos de choferes
   @Input() access_types: VehicleType[] = [] // Lista de typos de choferes
   @Input() status_types: VehicleType[] = [] // Lista de typos de choferes
+
+  // Datos para poder usar la ventana de alerta
+  modalAlert: any = {
+    title: '',
+    isVisible: false,
+    message: '',
+    actions: {
+      accept: () => {},
+      cancel: () => {}
+    }
+  }
 
   errors:any = {
     plate_number: '',
@@ -53,10 +65,14 @@ export class NewRegisterComponent implements OnInit{
     destiny: new FormControl('', Validators.required),
     observation: new FormControl('', Validators.required),
   })
+  hasChanged: boolean = false;
+  areErrors: boolean = false;
 
   constructor(
     private cameraService: CameraService,
-    private restApi: RestApiService
+    private restApi: RestApiService,
+    private cdr: ChangeDetectorRef,
+    private reload: ReloadService
 
   ) {}
 
@@ -66,7 +82,9 @@ export class NewRegisterComponent implements OnInit{
 
   subscription() {
     this.cameraService.vehicle$.subscribe((data: any) => {
-      this.getVehicle(data.plate_number)
+      if(data.plate_number) {
+        this.getVehicle(data.plate_number)
+      }
       this.formData.get('plate_number')?.disabled
     })
   }
@@ -228,12 +246,59 @@ export class NewRegisterComponent implements OnInit{
 
   }
 
-  sendData() {
+    /* Funcion para preparar las ventanas modal */
+    enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
+    this.modalAlert.title = title
+    this.modalAlert.message = message
+    this.modalAlert.icon = icon
+    this.modalAlert.actions.accept = accept
+    this.modalAlert.actions.cancel = cancel
+    this.modalAlert.isVisible = true
+    this.cdr.markForCheck()
+  }
+
+  /* Carga los datos del formulario de agregar nuevo */
+  prepareToAdd() {
+    this.enableAlertModal(
+      "Atención",
+      '¿Desea guardar este registro?',
+      'info',
+      () => this.addData(),
+      () => this.modalAlert.isVisible = false
+    )
+  }
+
+  addData() {
     if(this.validateDataToSend()) {
       this.restApi.doPost(`${ROUTES_API.register}/new`, this.formData.value).subscribe((data:any) => {
-        console.log(data);
+        if(data.result[0]) {
+          this.enableAlertModal(
+            "Hecho",
+            'Registro agregado correctamente',
+            'done',
+            () => this.resetFormAndClose(),
+            () => this.resetFormAndClose()
+          )
+          this.reload.addChanges({changes: true, type: CHANGES_TYPE.ADD})
+          this.reload.wasSaved(true)
+        } else{
+          this.enableAlertModal(
+            "Error",
+            data.result[1].error,
+            'error',
+            () => {this.modalAlert.isVisible = false},
+            () => {this.modalAlert.isVisible = false},
+          )
+        }
       })
     }
+  }
+  resetFormAndClose() {
+    this.formData.reset()
+    this.modalAlert.isVisible = false
+    this.vehicle = []
+    this.driver = []
+    this.hideForm()
   }
 
   validateDataToSend() {
@@ -257,7 +322,6 @@ export class NewRegisterComponent implements OnInit{
           this.errors.general = 'Debe llenar todos los campos'
           return false
         } else {
-        console.log(this.formData.value);
         this.errors.general = ''
         return true
       }

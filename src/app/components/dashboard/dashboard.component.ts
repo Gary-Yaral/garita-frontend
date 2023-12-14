@@ -2,6 +2,7 @@ import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { API_PATH, CAMERA_PATH } from 'src/app/config/constants';
 import { VehicleType } from 'src/app/interfaces/allTypes';
 import { CameraService } from 'src/app/services/camera.service';
+import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -36,13 +37,20 @@ export class DashboardComponent implements AfterContentInit{
     private socket: SocketService,
     private cameraService: CameraService,
     private storageService: StorageService,
+    private reload: ReloadService,
     private restApi: RestApiService
   ) {}
 
   ngOnInit(): void {
     // Leemos los datos del storage
+    this.reload.dataSaved$.subscribe(newValue => {
+      if(newValue) {
+        this.deleteData()
+      }
+    })
     this.readStorageData()
     this.detectPlate()
+
   }
 
   ngAfterContentInit(): void {

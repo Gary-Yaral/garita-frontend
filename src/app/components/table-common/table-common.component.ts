@@ -1,7 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CAMERA_PATH, EXCEL_PATH } from 'src/app/config/constants';
+import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
+import { CHANGES_TYPE } from 'src/app/utilities/constants';
 import { Paginator } from 'src/app/utilities/paginator';
 
 @Component({
@@ -34,8 +36,33 @@ export class TableCommonComponent implements OnChanges, AfterViewInit {
   lifeUrl: string = CAMERA_PATH
   constructor(
     private restApi: RestApiService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private hadChangedService: ReloadService
   ) {}
+
+  ngOnInit(): void {
+    this.hadChangedService.hadChanged$.subscribe(newValue => {
+      if(newValue.changes) {
+        if(newValue.type === CHANGES_TYPE.ADD) {
+          this.getItems()
+        }
+        if(newValue.type === CHANGES_TYPE.UPDATE) {
+          this.getItems()
+        }
+        if(newValue.type === CHANGES_TYPE.DELETE) {
+          if(this.items.length === 1) {
+            this.table.path = this.path
+            this.table.pathLoads = this.pathLoads
+            this.perPage.get('number')?.setValue(this.table.perPages[0])
+            this.table.currentPage = 1
+            this.getItems()
+          } else {
+            this.getItems()
+          }
+        }
+      }
+    });
+  }
 
   // Inicializamos la tabla luego de que los componente carguen
   ngAfterViewInit(): void {

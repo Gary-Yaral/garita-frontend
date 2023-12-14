@@ -3,8 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { concat } from 'rxjs';
 import { ROUTES_API } from 'src/app/config/constants';
 import { FormTitle, RolType, StatusType, UserData, formTitle } from 'src/app/interfaces/allTypes';
+import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { FORM_TITLES } from 'src/app/utilities/constants';
+import { CHANGES_TYPE, FORM_TITLES } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaValidator, passwordValidator, usernameValidator } from 'src/app/utilities/functions';
 import { nameRegex } from 'src/app/utilities/regExp';
 
@@ -29,7 +30,6 @@ export class UsersComponent implements AfterViewInit{
   ]
 
   /** PROPIEDADES DEL COMPONENTE */
-  hasChanged = false // Propiedad para refresh tabla
   isVisible:boolean = false // Propiedad para ocultar o mostrar formulario
   status_types: StatusType[] = [] // Lista de typos de choferes
   rol_types: RolType[] = [] // Lista de typos de choferes
@@ -103,7 +103,8 @@ export class UsersComponent implements AfterViewInit{
 
   constructor(
     private restApi: RestApiService,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private reload: ReloadService) {}
 
   ngAfterViewInit(): void {
     let counter = 0
@@ -364,7 +365,6 @@ export class UsersComponent implements AfterViewInit{
   /* Actualiza los datos de un registro de las base de datos*/
   updateData() {
     this.modalAlert.isVisible = false
-
     if(this.formData.valid || this.isValidNotPassword() ) {
       this.restApi.doPost(`${this.path}/update`, this.formData.value).subscribe((data:any) => {
         if(data.result[0]) {
@@ -375,7 +375,7 @@ export class UsersComponent implements AfterViewInit{
             () => this.resetFormAndClose(),
             () => this.resetFormAndClose()
           )
-          this.hasChanged = true
+          this.reload.addChanges({changes: true, type: CHANGES_TYPE.UPDATE})
         } else {
           this.enableAlertModal(
             "Error",
@@ -404,7 +404,7 @@ export class UsersComponent implements AfterViewInit{
             () => this.resetFormAndClose(),
             () => this.resetFormAndClose()
           )
-          this.hasChanged = true
+          this.reload.addChanges({changes: true, type: CHANGES_TYPE.ADD})
           this.areErrors = false
         } else{
           this.enableAlertModal(
@@ -433,7 +433,7 @@ export class UsersComponent implements AfterViewInit{
           () => this.resetFormAndClose(),
           () => this.resetFormAndClose()
         )
-        this.hasChanged = true
+        this.reload.addChanges({changes: true, type: CHANGES_TYPE.DELETE})
         this.areErrors = false
       } else {
         this.enableAlertModal(
@@ -495,8 +495,6 @@ export class UsersComponent implements AfterViewInit{
     this.isVisible = false
     // Ocultamos la ventana modal
     this.modalAlert.isVisible = false
-    // Indicamos que no ha habido cambios para la tabla
-    this.hasChanged = false
     // Resetamos el tipo de formulario que se mostrará
     this.newRegister = false
     // Reseteamos los datos del formulario

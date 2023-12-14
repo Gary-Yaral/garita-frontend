@@ -2,7 +2,9 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ROUTES_API } from 'src/app/config/constants';
 import { Driver, DriverType } from 'src/app/interfaces/allTypes';
+import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
+import { CHANGES_TYPE } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaValidator } from 'src/app/utilities/functions';
 import { nameRegex } from 'src/app/utilities/regExp';
 
@@ -22,7 +24,7 @@ export class RegistersComponent {
     'Chofér',
     'Apellidos',
     'Placa',
-    'Tipo Acceso',
+    'Tipo de registro',
     'Tipo Vehiculo',
     'Kilometros',
     'Observacion',
@@ -102,7 +104,8 @@ export class RegistersComponent {
 
    constructor(
      private restApi: RestApiService,
-     private cdr: ChangeDetectorRef) {}
+     private cdr: ChangeDetectorRef,
+     private reload: ReloadService) {}
 
    ngAfterViewInit(): void {}
 
@@ -324,8 +327,6 @@ export class RegistersComponent {
      this.modalAlert.isVisible = false
      this.areErrors = true
      this.restApi.doPost(`${this.path}/delete`, {id}).subscribe((data:any) => {
-       console.log(data);
-
        if(data.result[0]) {
          this.enableAlertModal(
            "Hecho",
@@ -334,8 +335,7 @@ export class RegistersComponent {
            () => this.resetFormAndClose(),
            () => this.resetFormAndClose()
          )
-         this.hasChanged = true
-         this.areErrors = false
+         this.reload.addChanges({changes: true, type: CHANGES_TYPE.DELETE})
        }
      })
    }
@@ -343,15 +343,8 @@ export class RegistersComponent {
    /* Limpiar el formulario luego de realizar acción */
    resetFormAndClose() {
      this.formData.reset()
-     this.formData.get('type_id')?.setValue('')
      this.isVisible = false
      this.modalAlert.isVisible = false
      this.hasChanged = false
-     this.newRegister = false
-     this.selected = this.initialData
-     this.areErrors = false
-     Object.keys(this.errors).forEach((key:string) => {
-       this.errors[key] = ''
-     })
    }
 }
