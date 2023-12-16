@@ -9,7 +9,7 @@
     <hr>
     <fieldset>
       <legend>Vehículo</legend>
-      <div *ngIf="formType !== types.UPDATE" class="checkbox">
+      <div *ngIf="formType === types.DETECTED" class="checkbox">
         <input type="checkbox" name="write_enable" id="write_enable" (change)="enableInputPlate($event)">
         <label for="write_enable">¿Desea editar la placa?</label>
       </div>

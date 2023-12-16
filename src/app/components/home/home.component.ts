@@ -38,21 +38,15 @@ export class HomeComponent implements OnInit {
   }
 
   doRequests() {
-    let counter = 0
-    const result = concat(this.restApi.doGet(`${ROUTES_API.register}/home-arrival-data`), this.restApi.doGet(`${ROUTES_API.register}/home-exit-data`))
-
-    result.subscribe((data:any) => {
-      counter++
-      // Si se ejecuta la primera peticion
-      if(counter === 1) {
-        if(data.result[0]) {
-          this.arrivalData = data.result[1]
-        }
+    let result: any[] = []
+    concat(this.restApi.doGet(`${ROUTES_API.register}/home-arrival-data`), this.restApi.doGet(`${ROUTES_API.register}/home-exit-data`)).subscribe((data:any) => {
+      if(data.result[0]) {
+        result.push(data.result[1])
       }
-      if(counter === 2) {
-        if(data.result[0]) {
-          this.exitData = data.result[1]
-        }
+
+      if(result.length === 2) {
+        this.arrivalData = result[0]
+        this.exitData = result[1]
       }
     });
   }

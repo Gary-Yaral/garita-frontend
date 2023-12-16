@@ -100,11 +100,9 @@ export class NewRegisterComponent implements OnInit{
           this.titleForm = 'Nuevo registro'
           this.vehicle = []
           this.driver = []
-          console.log('regis');
-
+          this.plateNumberLocked = false
         }
         if(data.type === REGISTER_FORM_TYPES.UPDATE) {
-          console.log('editar');
           this.titleForm = 'Editar registro'
           this.loadRegisterToUpdate(data.id)
           this.idLoaded = data.id
@@ -150,7 +148,6 @@ export class NewRegisterComponent implements OnInit{
     let vehicleData: any ;
     let driverData: any;
     concat(this.getVehicle(plate_number), this.getDriver(dni)).subscribe((data: any) => {
-      console.log(data);
       if(!vehicleData) {
         vehicleData = data;
       }
@@ -200,7 +197,6 @@ export class NewRegisterComponent implements OnInit{
   }
 
   processVehicleData(data:any) {
-    console.log(data);
     if(data.result[0]) {
       this.vehicle = [data.result[1]]
       this.errors.plate_number = ''
@@ -399,7 +395,7 @@ export class NewRegisterComponent implements OnInit{
         if(data.result[0]) {
           this.enableAlertModal(
             "Hecho",
-            'Registro aactualizado correctamente',
+            'Registro actualizado correctamente',
             'done',
             () => this.resetFormAndClose(),
             () => this.resetFormAndClose()
@@ -434,7 +430,6 @@ export class NewRegisterComponent implements OnInit{
   validateDataToSend() {
     if(this.isMandatory) {
       if(this.formData.valid) {
-        console.log(this.formData.value);
         this.errors.general = ''
         return true
       } else {

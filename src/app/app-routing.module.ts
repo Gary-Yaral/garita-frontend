@@ -6,7 +6,6 @@ import { HomeComponent } from './components/home/home.component';
 import { CameraComponent } from './components/camera/camera.component';
 import { VehiclesComponent } from './components/vehicles/vehicles.component';
 import { DriversComponent } from './components/drivers/drivers.component';
-import { RolesComponent } from './components/roles/roles.component';
 import { RegistersComponent } from './components/registers/registers.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -50,10 +49,6 @@ const routes: Routes = [
       {
         path:"drivers",
         component: DriversComponent
-      },
-      {
-        path:"roles",
-        component: RolesComponent
       },
       {
         path:"registers",

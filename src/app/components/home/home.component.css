@@ -40,9 +40,11 @@
 
 .card-title {
   width: 100%;
-  color: yellow;
+  color: rgb(192, 255, 2);
   display: flex;
   justify-content: center;
+  margin: 1rem 0;
+  font-weight: bold;
 }
 
 .card-info {
@@ -51,6 +53,9 @@
   align-items: center;
   gap: 10px;
   justify-content: space-between;
+  border: 1px solid white;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.196);
 }
 
 .card-prop {
@@ -72,6 +77,13 @@
   margin: 2rem 0;
   display: flex;
   justify-content: center;
+}
+
+.fieldset-card {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 1rem;
 }
 
 @media screen and (max-width:800px) {

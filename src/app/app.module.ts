@@ -8,7 +8,6 @@ import { HomeComponent } from './components/home/home.component';
 import { CameraComponent } from './components/camera/camera.component';
 import { VehiclesComponent } from './components/vehicles/vehicles.component';
 import { DriversComponent } from './components/drivers/drivers.component';
-import { RolesComponent } from './components/roles/roles.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FloatNavbarComponent } from './components/float-navbar/float-navbar.component';
 import { LoginComponent } from './components/login/login.component';
@@ -33,7 +32,6 @@ const config: SocketIoConfig = { url: SERVER_CAMERA_PATH, options: {} };
     CameraComponent,
     VehiclesComponent,
     DriversComponent,
-    RolesComponent,
     NavbarComponent,
     FloatNavbarComponent,
     LoginComponent,

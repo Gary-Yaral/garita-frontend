@@ -86,6 +86,13 @@ export class DriversComponent implements AfterViewInit{
       if(data.result[0]) {
         this.types = data.result[1]
       } else {
+        this.enableAlertModal(
+          "Error",
+          'Error al cargar los tipos de choferes',
+          'error',
+          () => this.modalAlert.isVisible = false,
+          () => this.modalAlert.isVisible = false
+        )
         console.log(data.result[0].error);
       }
     })

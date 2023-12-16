@@ -163,8 +163,6 @@ export class TableCommonComponent implements OnChanges, AfterViewInit {
       dataToSend
     ).subscribe((data: any) => {
       if(!data.error) {
-        console.log(data);
-
         if(data.result[0] === true) {
           data.result[1].map((el:any, i:number) => {
             el.index = ((this.table.currentPage - 1) * this.perPage.get('number')?.value) + (i+1)
