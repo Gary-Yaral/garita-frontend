@@ -5,47 +5,9 @@
   [path]= "path"
   [theads]= "theads"
   [fields]= "fields"
-  [wasUpdated]="hasChanged"
   (prepareFormToAdd)="prepareFormToAdd()"
   (prepareFormToUpdate)="prepareFormToUpdate($event)"
   (prepareToDelete)="prepareToDelete($event)"></app-table-common>
-  <div class="modal-form {{!isVisible ? 'hidden': ''}}">
-    <form [formGroup]="formData">
-      <div class="close-form" (click)="resetFormAndClose()">
-        <i class="fa-solid fa-xmark"></i>
-      </div>
-      <h2 class="modal-title">{{formTitle}}</h2>
-      <div class="modal-input-block">
-        <label for="">Cédula</label>
-        <input type="text" name="dni" formControlName="dni" (input)="detectChange($event)">
-        <sub class="error-form" *ngIf="errors['dni'] !== ''">{{errors['dni']}}</sub>
-      </div>
-      <div class="modal-input-block">
-        <label for="">Nombres</label>
-        <input type="text" name="name" formControlName="name" (input)="detectChange($event)">
-        <sub class="error-form" *ngIf="errors['name'] !== ''">{{errors['name']}}</sub>
-      </div>
-      <div class="modal-input-block">
-        <label for="">Apellidos</label>
-        <input type="text" name="surname" formControlName="surname" (input)="detectChange($event)">
-        <sub class="error-form" *ngIf="errors['surname'] !== ''">{{errors['surname']}}</sub>
-      </div>
-      <div class="modal-input-block">
-        <label for="">Tipo</label>
-        <select  name="type_id" formControlName="type_id" (change)="detectChange($event)">
-          <option value="">Escoja el tipo</option>
-          <option *ngFor="let type of types" value="{{type.id}}">{{type.name | titlecase}}</option>
-        </select>
-        <sub class="error-form" *ngIf="errors['type_id'] !== ''">{{errors['type_id']}}</sub>
-      </div>
-      <div class="btns-form-modal">
-        <button *ngIf="!newRegister" class="btn-modal-ok" (click)="prepareToUpdate()">Guardar</button>
-        <button *ngIf="newRegister" class="btn-modal-ok" (click)="prepareToAdd()">Guardar</button>
-        <button class="btn-modal-cancel" (click)="resetFormAndClose()">Cancelar</button>
-      </div>
-      <sub *ngIf="areErrors" class="error-form">Complete todos los campos correctamente</sub>
-    </form>
-  </div>
   <app-footer></app-footer>
   <app-alert
     [title]="modalAlert.title"

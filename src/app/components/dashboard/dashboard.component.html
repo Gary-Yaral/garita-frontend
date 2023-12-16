@@ -3,9 +3,7 @@
   <app-new-register
     *ngIf="formVisible"
     (showForm)="hideForm()"
-    [vehicle_types]="vehicle_types"
-    [status_types]="status_types"
-    [access_types]="access_types"></app-new-register>
+    [formType]="formType"></app-new-register>
   <section class="detected-window {{'border-'+iconSelected.color}}" *ngIf="wasDetected">
     <div (click)="showForm()" class="detected-card {{iconSelected.color+'-card'}}">
       <span class="detected-text">Vehiculo detectado</span>

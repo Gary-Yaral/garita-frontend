@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { concat } from 'rxjs';
 import { ROUTES_API } from 'src/app/config/constants';
-import { DriverLoaded, Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
+import { DriverLoaded, Vehicle } from 'src/app/interfaces/allTypes';
 import { CameraService } from 'src/app/services/camera.service';
 import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { CHANGES_TYPE, INITIAL_VEHICLE_DATA, MANDATORY_IF_HAVE_IDS } from 'src/app/utilities/constants';
+import { CHANGES_TYPE, INITIAL_VEHICLE_DATA, MANDATORY_IF_HAVE_IDS, REGISTER_FORM_TYPES } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaFn } from 'src/app/utilities/functions';
 import { textarea } from 'src/app/utilities/regExp';
 
@@ -16,9 +17,8 @@ import { textarea } from 'src/app/utilities/regExp';
 })
 export class NewRegisterComponent implements OnInit{
   @Output() showForm: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Input() vehicle_types: VehicleType[] = [] // Lista de typos de choferes
-  @Input() access_types: VehicleType[] = [] // Lista de typos de choferes
-  @Input() status_types: VehicleType[] = [] // Lista de typos de choferes
+  @Input() formType: number = REGISTER_FORM_TYPES.NULL;
+
 
   // Datos para poder usar la ventana de alerta
   modalAlert: any = {
@@ -45,15 +45,19 @@ export class NewRegisterComponent implements OnInit{
   vehicle: Vehicle[] = []
   kmRegex: RegExp = /^\d+(\.\d+)?(,\d+)?$/
 
+  types = REGISTER_FORM_TYPES
   plateNumberLocked: boolean = true
   isMandatory = false
   dniLength = 10
   plateNumberLength = 10
+  idLoaded: number = 0
+  titleForm: string = 'Nuevo registro'
   errorMsgDriverLoad: string = 'Escriba un número de cédula válido'
   driverLoadError = {
     error: false,
     msg: this.errorMsgDriverLoad
   }
+
 
   formData: FormGroup = new FormGroup({
     vehicle_id: new FormControl('', Validators.required),
@@ -65,28 +69,48 @@ export class NewRegisterComponent implements OnInit{
     destiny: new FormControl('', Validators.required),
     observation: new FormControl('', Validators.required),
   })
-  hasChanged: boolean = false;
-  areErrors: boolean = false;
 
   constructor(
     private cameraService: CameraService,
     private restApi: RestApiService,
-    private cdr: ChangeDetectorRef,
     private reload: ReloadService
 
   ) {}
 
   ngOnInit() {
-    this.subscription()
+    this.formRegisterSubscription()
+    this.cameraSubscription()
   }
 
-  subscription() {
-    this.cameraService.vehicle$.subscribe((data: any) => {
-      if(data.plate_number) {
-        this.getVehicle(data.plate_number)
-      }
-      this.formData.get('plate_number')?.disabled
-    })
+  cameraSubscription() {
+    if(this.formType === REGISTER_FORM_TYPES.DETECTED) {
+      this.cameraService.vehicle$.subscribe((data: any) => {
+        if(data.plate_number) {
+          this.suscribeVehicle(data.plate_number)
+        }
+      })
+    }
+  }
+
+  formRegisterSubscription() {
+    if(this.formType !== REGISTER_FORM_TYPES.ADD) {
+      this.reload.formActions$.subscribe((data:any)=> {
+        this.formType = data.type
+        if(data.type === REGISTER_FORM_TYPES.ADD) {
+          this.titleForm = 'Nuevo registro'
+          this.vehicle = []
+          this.driver = []
+          console.log('regis');
+
+        }
+        if(data.type === REGISTER_FORM_TYPES.UPDATE) {
+          console.log('editar');
+          this.titleForm = 'Editar registro'
+          this.loadRegisterToUpdate(data.id)
+          this.idLoaded = data.id
+        }
+      })
+    }
   }
 
   enableInputPlate(event: any) {
@@ -95,6 +119,50 @@ export class NewRegisterComponent implements OnInit{
     } catch (error) {
       console.log(error);
     }
+  }
+
+  loadRegisterToUpdate(id: number) {
+    this.restApi.doPost(`${ROUTES_API.register}/find-one`, {id}).subscribe((data:any) => {
+      if(data.result[0]) {
+        // Extramos los datos como variables
+        let {
+          id,
+          plate_number,
+          dni,
+          observation,
+          kms,
+          destiny
+        } = data.result[1]
+        // Seteamos los datos en el formulario
+        this.formData.get('id')?.setValue(id)
+        this.formData.get('plate_number')?.setValue(plate_number)
+        this.formData.get('kms')?.setValue(kms)
+        this.formData.get('destiny')?.setValue(destiny)
+        this.formData.get('dni')?.setValue(dni)
+        this.formData.get('observation')?.setValue(observation)
+        // Consultamos placa y dni
+        this.doRequest(plate_number, dni)
+      }
+    })
+  }
+
+  doRequest(plate_number: string, dni: string) {
+    let vehicleData: any ;
+    let driverData: any;
+    concat(this.getVehicle(plate_number), this.getDriver(dni)).subscribe((data: any) => {
+      console.log(data);
+      if(!vehicleData) {
+        vehicleData = data;
+      }
+      if(vehicleData) {
+        driverData = data;
+      }
+      if(vehicleData && driverData) {
+        this.processVehicleData(vehicleData);
+        this.processDriverData(driverData);
+      }
+
+    });
   }
 
   readPlate(event: any) {
@@ -112,7 +180,7 @@ export class NewRegisterComponent implements OnInit{
     if(/^[A-Z]{3}-\d{3,4}$/.exec(value)) {
       this.formData.get('plate_number')?.setValue(value)
       this.errors.plate_number = ''
-      this.getVehicle(value)
+      this.suscribeVehicle(value)
     } else {
       this.vehicle = []
       this.isMandatory = false
@@ -120,25 +188,33 @@ export class NewRegisterComponent implements OnInit{
     }
   }
 
-  getVehicle(plate_number: string) {
+  suscribeVehicle(plate_number:string) {
     this.formData.get('plate_number')?.setValue(plate_number)
-
-    this.restApi.doPost(`${ROUTES_API.vehicle}/find`, {plate_number}).subscribe((data:any)=> {
-      if(data.result[0]) {
-        this.vehicle = [data.result[1]]
-        this.errors.plate_number = ''
-        let vehicleTypeId = this.vehicle[0].vehicle_type_id
-        this.formData.get('vehicle_id')?.setValue(this.vehicle[0].id)
-        this.formData.get('status_type_id')?.setValue(this.vehicle[0].status_type_id)
-        this.isMandatory = MANDATORY_IF_HAVE_IDS.includes(parseInt(`${vehicleTypeId}`))
-      } else {
-        this.vehicle = []
-        this.formData.get('vehicle_id')?.reset()
-        this.formData.get('status_type_id')?.reset()
-        this.formData.get('plate_number')?.setValue(plate_number)
-        this.errors.plate_number = 'Placa no se encuentra registrada. Si desea agregar un registro con ella, primero vaya a la sección vehículos y desde ahí agregue el vehículo al que pertenece esa placa.'
-      }
+    this.getVehicle(plate_number).subscribe((data: any) =>{
+      this.processVehicleData(data)
     })
+  }
+
+  getVehicle(plate_number: string) {
+    return this.restApi.doPost(`${ROUTES_API.vehicle}/find`, {plate_number})
+  }
+
+  processVehicleData(data:any) {
+    console.log(data);
+    if(data.result[0]) {
+      this.vehicle = [data.result[1]]
+      this.errors.plate_number = ''
+      let vehicleTypeId = this.vehicle[0].vehicle_type_id
+      this.formData.get('vehicle_id')?.setValue(this.vehicle[0].id)
+      this.formData.get('status_type_id')?.setValue(this.vehicle[0].status_type_id)
+      this.isMandatory = MANDATORY_IF_HAVE_IDS.includes(parseInt(`${vehicleTypeId}`))
+    } else {
+      this.vehicle = []
+      this.formData.get('vehicle_id')?.reset()
+      this.formData.get('status_type_id')?.reset()
+      /* this.formData.get('plate_number')?.setValue(plate_number) */
+      this.errors.plate_number = 'Placa no se encuentra registrada. Si desea agregar un registro con ella, primero vaya a la sección vehículos y desde ahí agregue el vehículo al que pertenece esa placa.'
+    }
   }
 
   readDriver(event: any) {
@@ -155,19 +231,30 @@ export class NewRegisterComponent implements OnInit{
       this.errors.dni = 'Escriba un número de cédula válido'
       return
     }
-    // Si no hay errores de validacion entonces hacemos la consulta
-    this.restApi.doPost(`${ROUTES_API.driver}/find`, {dni: value}).subscribe((data:any)=> {
-      if(data.result[0]) {
-        this.errors.dni = ''
-        this.driver = [data.result[1]]
-        this.formData.get('driver_id')?.setValue(this.driver[0].id)
-      } else {
-        // Si no se encuentra la cedula limpiamos campos
-        this.driver = []
-        this.formData.get('driver_id')?.reset()
-        this.errors.dni = 'Número de cédula no está registrado. Si desea agregar un registro usando esta cédula, debe agregar al chofer al que le pertenece esa cédula en la sección chofér'
-      }
-    })
+   this.suscribeDriver(value)
+  }
+
+  suscribeDriver(dni: string) {
+    this.formData.get('driver_id')?.setValue(dni)
+    this.getDriver(dni).subscribe((data:any) => this.processDriverData(data))
+  }
+
+  processDriverData(data:any) {
+    if(data.result[0]) {
+      this.errors.dni = ''
+      this.driver = [data.result[1]]
+      this.formData.get('driver_id')?.setValue(this.driver[0].id)
+    } else {
+      // Si no se encuentra la cedula limpiamos campos
+      this.driver = []
+      this.formData.get('driver_id')?.reset()
+      this.errors.dni = 'Número de cédula no está registrado. Si desea agregar un registro usando esta cédula, debe agregar al chofer al que le pertenece esa cédula en la sección chofér'
+    }
+  }
+
+
+  getDriver(dni: string) {
+    return this.restApi.doPost(`${ROUTES_API.driver}/find`, {dni})
   }
 
   hideForm() {
@@ -217,6 +304,7 @@ export class NewRegisterComponent implements OnInit{
     }
 
     if(!!textarea.exec(value)) {
+      this.errors.observation = ''
       return
     }
 
@@ -246,24 +334,34 @@ export class NewRegisterComponent implements OnInit{
 
   }
 
-    /* Funcion para preparar las ventanas modal */
-    enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
-    this.modalAlert.title = title
-    this.modalAlert.message = message
-    this.modalAlert.icon = icon
-    this.modalAlert.actions.accept = accept
-    this.modalAlert.actions.cancel = cancel
-    this.modalAlert.isVisible = true
-    this.cdr.markForCheck()
-  }
+  /* Funcion para preparar las ventanas modal */
+  enableAlertModal(title: string, message: string, icon:string, accept: Function, cancel: Function) {
+  this.modalAlert.title = title
+  this.modalAlert.message = message
+  this.modalAlert.icon = icon
+  this.modalAlert.actions.accept = accept
+  this.modalAlert.actions.cancel = cancel
+  this.modalAlert.isVisible = true
+}
 
-  /* Carga los datos del formulario de agregar nuevo */
+  /* Pregunta si desea agregar el registro */
   prepareToAdd() {
     this.enableAlertModal(
       "Atención",
       '¿Desea guardar este registro?',
       'info',
       () => this.addData(),
+      () => this.modalAlert.isVisible = false
+    )
+  }
+
+  /* Pregunta si deseamos editar los datos */
+  prepareToUpdate() {
+    this.enableAlertModal(
+      "Atención",
+      '¿Desea guardar los cambios?',
+      'info',
+      () => this.updateData(),
       () => this.modalAlert.isVisible = false
     )
   }
@@ -293,12 +391,44 @@ export class NewRegisterComponent implements OnInit{
       })
     }
   }
+
+  updateData() {
+    if(this.validateDataToSend()) {
+      let dataToSend = {...this.formData.value, id: this.idLoaded}
+      this.restApi.doPost(`${ROUTES_API.register}/update`,dataToSend).subscribe((data:any) => {
+        if(data.result[0]) {
+          this.enableAlertModal(
+            "Hecho",
+            'Registro aactualizado correctamente',
+            'done',
+            () => this.resetFormAndClose(),
+            () => this.resetFormAndClose()
+          )
+          this.reload.addChanges({changes: true, type: CHANGES_TYPE.ADD})
+          this.reload.wasSaved(true)
+        } else{
+          this.enableAlertModal(
+            "Error",
+            data.result[1].error,
+            'error',
+            () => {this.modalAlert.isVisible = false},
+            () => {this.modalAlert.isVisible = false},
+          )
+        }
+      })
+    }
+  }
+
   resetFormAndClose() {
+    this.resetForm()
+    this.hideForm()
+  }
+
+  resetForm() {
     this.formData.reset()
     this.modalAlert.isVisible = false
     this.vehicle = []
     this.driver = []
-    this.hideForm()
   }
 
   validateDataToSend() {
@@ -309,6 +439,7 @@ export class NewRegisterComponent implements OnInit{
         return true
       } else {
         this.errors.general = 'Debe llenar todos los campos'
+        this.modalAlert.isVisible = false
         return false
       }
     } else {
@@ -320,6 +451,7 @@ export class NewRegisterComponent implements OnInit{
         this.formData.get('driver_id')?.hasError('required')
         ){
           this.errors.general = 'Debe llenar todos los campos'
+          this.modalAlert.isVisible = false
           return false
         } else {
         this.errors.general = ''

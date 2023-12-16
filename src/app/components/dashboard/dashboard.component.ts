@@ -6,6 +6,7 @@ import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { REGISTER_FORM_TYPES } from 'src/app/utilities/constants';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +31,7 @@ export class DashboardComponent implements AfterContentInit{
   wasDetected = false;
   iconSelected = this.icons.danger
   formVisible = false;
+  formType = REGISTER_FORM_TYPES.DETECTED
   lifeUrl: string = CAMERA_PATH
   pathService: string = `${API_PATH}/vehicle`
 
@@ -42,19 +44,23 @@ export class DashboardComponent implements AfterContentInit{
   ) {}
 
   ngOnInit(): void {
-    // Leemos los datos del storage
-    this.reload.dataSaved$.subscribe(newValue => {
+    this.plateNumberSubscription()
+    this.formRegisterSubscription()
+  }
+
+  ngAfterContentInit(): void {
+    this.loadDataForm()
+  }
+
+  plateNumberSubscription() {
+     // Leemos los datos del storage
+     this.reload.dataSaved$.subscribe(newValue => {
       if(newValue) {
         this.deleteData()
       }
     })
     this.readStorageData()
     this.detectPlate()
-
-  }
-
-  ngAfterContentInit(): void {
-    this.loadDataForm()
   }
 
   loadDataForm() {
@@ -127,11 +133,21 @@ export class DashboardComponent implements AfterContentInit{
   }
   showForm() {
     this.formVisible = true
+    this.reload.setFormAction({show: true, type: REGISTER_FORM_TYPES.DETECTED})
   }
 
   deleteData() {
     this.cameraService.restartData()
     this.storageService.clearDetectedData()
     this.wasDetected = false
+  }
+
+  // Método para detectar cuando se llame a formulario desde cualquier lado
+  formRegisterSubscription() {
+    this.reload.formActions$.subscribe((data:any)=> {
+      if(data.show) {
+        this.formVisible = true
+      }
+    })
   }
 }

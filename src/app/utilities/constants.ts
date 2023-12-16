@@ -27,4 +27,11 @@ export const CHANGES_TYPE = {
   DELETE: 3
 }
 
+export const REGISTER_FORM_TYPES = {
+  ADD: 1,
+  UPDATE: 2,
+  DETECTED:3,
+  NULL:4
+}
+
 export const MANDATORY_IF_HAVE_IDS = [1]

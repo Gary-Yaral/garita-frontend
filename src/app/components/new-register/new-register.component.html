@@ -4,12 +4,12 @@
       <div class="close" (click)="hideForm()">
         <i class="fa-solid fa-arrow-left"></i>
       </div>
-      <h2>Nuevo registro</h2>
+      <h2>{{titleForm}}</h2>
     </div>
     <hr>
     <fieldset>
       <legend>Vehículo</legend>
-      <div class="checkbox">
+      <div *ngIf="formType !== types.UPDATE" class="checkbox">
         <input type="checkbox" name="write_enable" id="write_enable" (change)="enableInputPlate($event)">
         <label for="write_enable">¿Desea editar la placa?</label>
       </div>
@@ -90,8 +90,9 @@
       </div>
     </fieldset>
     <div class="btns-block">
-      <button (click)="prepareToAdd()">Guardar</button>
-      <button>Cancelar</button>
+      <button *ngIf="formType === types.ADD || formType === types.DETECTED" (click)="prepareToAdd()">Guardar</button>
+      <button *ngIf="formType === types.UPDATE" (click)="prepareToUpdate()">Editar</button>
+      <div (click)="hideForm()">Cancelar</div>
     </div>
     <sub class="error-form" *ngIf="errors.general !== ''">{{errors.general}}</sub>
   </form>
