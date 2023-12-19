@@ -18,8 +18,6 @@ export class HomeComponent implements OnInit {
   exitData: HomeData[] = []
 
   constructor(
-    private socket: SocketService,
-    private cameraService: CameraService,
     private restApi: RestApiService,
     private changeDate: ChangeDateService
   ) {}
