@@ -132,10 +132,10 @@ export class RegistersComponent {
        } else {
         this.enableAlertModal(
           "Error",
-          'Ha ocurrido un error al eliminar el registro',
+          data.result[1].error,
           'error',
-          () => ()=>{},
-          () => ()=>{}
+          () => {this.modalAlert.isVisible = false},
+          () => {this.modalAlert.isVisible = false},
         )
        }
      })

@@ -316,6 +316,14 @@ export class DriversComponent implements AfterViewInit{
         )
         this.reload.addChanges({changes: true, type: CHANGES_TYPE.DELETE})
         this.areErrors = false
+      } else {
+        this.enableAlertModal(
+          "Error",
+          data.result[1].error,
+          'error',
+          () => {this.modalAlert.isVisible = false},
+          () => {this.modalAlert.isVisible = false},
+        )
       }
     })
   }
