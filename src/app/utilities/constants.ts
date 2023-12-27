@@ -1,4 +1,4 @@
-import { FormTitle } from "../interfaces/allTypes";
+import { FormTitle, ModalProps } from "../interfaces/allTypes";
 
 export const FORM_TITLES: FormTitle = {
   add:'Agregar',
@@ -30,8 +30,19 @@ export const CHANGES_TYPE = {
 export const REGISTER_FORM_TYPES = {
   ADD: 1,
   UPDATE: 2,
-  DETECTED:3,
-  NULL:4
+  DETECTED: 3,
+  NULL: 4
 }
 
 export const MANDATORY_IF_HAVE_IDS = [1]
+
+export const DEFAULT_DATA_MODAL: ModalProps = {
+  title: '',
+  isVisible: false,
+  message: '',
+  icon: '',
+  actions: {
+    accept: () => {},
+    cancel: () => {}
+  }
+}

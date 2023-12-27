@@ -70,6 +70,7 @@ export class DashboardComponent implements AfterContentInit{
         this.access_types = data.result[1].access_types
         this.status_types = data.result[1].status_types
         this.vehicle_types = data.result[1].vehicles_types
+
       } else {
         console.error("No se ha podido cargar los datos para formulario de nuevo registro de vehículo")
       }
@@ -132,7 +133,6 @@ export class DashboardComponent implements AfterContentInit{
     this.formVisible = false
   }
   showForm() {
-    this.formVisible = true
     this.reload.setFormAction({show: true, type: REGISTER_FORM_TYPES.DETECTED})
   }
 

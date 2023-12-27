@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { concat } from 'rxjs';
 import { CAMERA_PATH, ROUTES_API } from 'src/app/config/constants';
 import { HomeData } from 'src/app/interfaces/allTypes';
-import { ChangeDateService } from 'src/app/service/change-date.service';
-import { CameraService } from 'src/app/services/camera.service';
+import { ChangeDateService } from 'src/app/services/change-date.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-home',

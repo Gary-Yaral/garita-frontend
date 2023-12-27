@@ -1,10 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ROUTES_API } from 'src/app/config/constants';
-import { Driver, DriverType } from 'src/app/interfaces/allTypes';
+import { Driver, DriverType, ModalProps } from 'src/app/interfaces/allTypes';
 import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { CHANGES_TYPE } from 'src/app/utilities/constants';
+import { CHANGES_TYPE, DEFAULT_DATA_MODAL } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaValidator } from 'src/app/utilities/functions';
 import { nameRegex } from 'src/app/utilities/regExp';
 
@@ -13,10 +13,10 @@ import { nameRegex } from 'src/app/utilities/regExp';
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.css']
 })
-export class DriversComponent implements AfterViewInit{
+export class DriversComponent implements OnInit{
   /** PROPIEDADES DE LA TABLA */
   sectionName:string = 'Choferes'
-  path: string = ROUTES_API.driver
+  path: string = ROUTES_API.driver // Ruta a donde se harán las peticiones
   theads: string[] = ['N°', 'Cédula', 'Nombres', 'Apellidos', 'Tipo', ' Opciones']
   fields: string[] = ['index','dni','name', 'surname', 'type']
 
@@ -28,15 +28,7 @@ export class DriversComponent implements AfterViewInit{
   newRegister: boolean = false; // Si el formulario es o no para agregar nuevo
 
   // Datos para poder usar la ventana de alerta
-  modalAlert: any = {
-    title: '',
-    isVisible: false,
-    message: '',
-    actions: {
-      accept: () => {},
-      cancel: () => {}
-    }
-  }
+  modalAlert: ModalProps = { ...DEFAULT_DATA_MODAL }
   // Datos para los mensajes de error del formulario modal
   errors: any = {
     dni: '',
@@ -79,7 +71,11 @@ export class DriversComponent implements AfterViewInit{
     private cdr: ChangeDetectorRef,
     private reload: ReloadService) {}
 
-  ngAfterViewInit(): void {}
+  ngOnInit(): void {
+    if(this.types.length === 0) {
+      this.loadTypes()
+    }
+  }
 
   loadTypes() {
     this.restApi.doGet(`${this.path}/types`).subscribe((data:any) => {
@@ -88,12 +84,12 @@ export class DriversComponent implements AfterViewInit{
       } else {
         this.enableAlertModal(
           "Error",
-          'Error al cargar los tipos de choferes',
+          data.result[1].error,
           'error',
           () => this.modalAlert.isVisible = false,
           () => this.modalAlert.isVisible = false
         )
-        console.log(data.result[0].error);
+        console.log(data.result[1].error);
       }
     })
   }

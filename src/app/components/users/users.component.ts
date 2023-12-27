@@ -2,10 +2,10 @@ import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { concat } from 'rxjs';
 import { ROUTES_API } from 'src/app/config/constants';
-import { FormTitle, RolType, StatusType, UserData, formTitle } from 'src/app/interfaces/allTypes';
+import { FormTitle, ModalProps, RolType, StatusType, UserData, formTitle } from 'src/app/interfaces/allTypes';
 import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { CHANGES_TYPE, FORM_TITLES } from 'src/app/utilities/constants';
+import { CHANGES_TYPE, DEFAULT_DATA_MODAL, FORM_TITLES } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaValidator, passwordValidator, usernameValidator } from 'src/app/utilities/functions';
 import { nameRegex } from 'src/app/utilities/regExp';
 
@@ -41,15 +41,7 @@ export class UsersComponent implements AfterViewInit{
   passWillBeShowed: boolean = false
 
   // Datos para poder usar la ventana de alerta
-  modalAlert: any = {
-    title: '',
-    isVisible: false,
-    message: '',
-    actions: {
-      accept: () => {},
-      cancel: () => {}
-    }
-  }
+  modalAlert: ModalProps = {...DEFAULT_DATA_MODAL}
 
   // Datos para los mensajes de error del formulario modal
   errors: any = {

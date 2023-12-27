@@ -1,12 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ROUTES_API } from 'src/app/config/constants';
-import { Driver, DriverType } from 'src/app/interfaces/allTypes';
+import { Driver, ModalProps } from 'src/app/interfaces/allTypes';
 import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { CHANGES_TYPE, REGISTER_FORM_TYPES } from 'src/app/utilities/constants';
-import { cedulaEcuatorianaValidator } from 'src/app/utilities/functions';
-import { nameRegex } from 'src/app/utilities/regExp';
+import { CHANGES_TYPE, DEFAULT_DATA_MODAL, REGISTER_FORM_TYPES } from 'src/app/utilities/constants';
 
 @Component({
   selector: 'app-registers',
@@ -16,7 +13,7 @@ import { nameRegex } from 'src/app/utilities/regExp';
 export class RegistersComponent {
    /** PROPIEDADES DE LA TABLA */
    sectionName:string = 'Registros'
-   path: string = ROUTES_API.register
+   path: string = ROUTES_API.register // Ruta a donde se harán las peticiones
    theads: string[] = [
     'N°',
     'Cédula',
@@ -51,15 +48,8 @@ export class RegistersComponent {
    isVisible:boolean = false // Propiedad para ocultar o mostrar formulario
 
    // Datos para poder usar la ventana de alerta
-   modalAlert: any = {
-     title: '',
-     isVisible: false,
-     message: '',
-     actions: {
-       accept: () => {},
-       cancel: () => {}
-     }
-   }
+   modalAlert: ModalProps = {...DEFAULT_DATA_MODAL}
+
    // Datos para los mensajes de error del formulario modal
    errors: any = {
      dni: '',

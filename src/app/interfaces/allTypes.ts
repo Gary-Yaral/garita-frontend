@@ -79,12 +79,24 @@ export interface DriverLoaded {
 }
 
 export type formTitle = 'Agregar'| 'Editar' | ''
+
 export interface FormTitle {
   add: formTitle,
   edit: formTitle,
   none: formTitle
 }
 
+interface AlertActions {
+  accept: Function,
+  cancel: Function
+}
 
+export interface ModalProps {
+  title: string,
+  isVisible: boolean,
+  message: string,
+  icon: string,
+  actions: AlertActions
+}
 
 export type driverKey = keyof Driver;

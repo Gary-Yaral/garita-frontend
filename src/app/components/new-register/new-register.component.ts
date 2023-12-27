@@ -1,12 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { concat } from 'rxjs';
 import { ROUTES_API } from 'src/app/config/constants';
-import { DriverLoaded, Vehicle } from 'src/app/interfaces/allTypes';
+import { DriverLoaded, ModalProps, Vehicle } from 'src/app/interfaces/allTypes';
 import { CameraService } from 'src/app/services/camera.service';
 import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
-import { CHANGES_TYPE, INITIAL_VEHICLE_DATA, MANDATORY_IF_HAVE_IDS, REGISTER_FORM_TYPES } from 'src/app/utilities/constants';
+import { CHANGES_TYPE, DEFAULT_DATA_MODAL, INITIAL_VEHICLE_DATA, MANDATORY_IF_HAVE_IDS, REGISTER_FORM_TYPES } from 'src/app/utilities/constants';
 import { cedulaEcuatorianaFn } from 'src/app/utilities/functions';
 import { textarea } from 'src/app/utilities/regExp';
 
@@ -21,15 +21,7 @@ export class NewRegisterComponent implements OnInit{
 
 
   // Datos para poder usar la ventana de alerta
-  modalAlert: any = {
-    title: '',
-    isVisible: false,
-    message: '',
-    actions: {
-      accept: () => {},
-      cancel: () => {}
-    }
-  }
+  modalAlert: ModalProps = {...DEFAULT_DATA_MODAL}
 
   errors:any = {
     plate_number: '',

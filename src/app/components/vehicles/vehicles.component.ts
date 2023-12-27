@@ -6,11 +6,11 @@ import {
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ROUTES_API } from 'src/app/config/constants';
-import { Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
+import { ModalProps, Vehicle, VehicleType } from 'src/app/interfaces/allTypes';
 import { ReloadService } from 'src/app/services/reload.service';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { CHANGES_TYPE } from 'src/app/utilities/constants';
+import { CHANGES_TYPE, DEFAULT_DATA_MODAL } from 'src/app/utilities/constants';
 
 @Component({
   selector: 'app-vehicles',
@@ -20,7 +20,7 @@ import { CHANGES_TYPE } from 'src/app/utilities/constants';
 export class VehiclesComponent implements AfterViewInit {
   /** PROPIEDADES DE LA TABLA */
   sectionName: string = 'Vehículos';
-  path: string = ROUTES_API.vehicle;
+  path: string = ROUTES_API.vehicle; // Ruta a donde se harán las peticiones
   theads: string[] = [
     'N°',
     'Placa',
@@ -47,15 +47,8 @@ export class VehiclesComponent implements AfterViewInit {
   newRegister: boolean = false; // Si el formulario es o no para agregar nuevo
 
   // Datos para poder usar la ventana de alerta
-  modalAlert: any = {
-    title: '',
-    isVisible: false,
-    message: '',
-    actions: {
-      accept: () => {},
-      cancel: () => {},
-    },
-  };
+  modalAlert: ModalProps = {...DEFAULT_DATA_MODAL}
+
   // Datos para los mensajes de error del formulario modal
   errors: any = {
     plate_number: '',
